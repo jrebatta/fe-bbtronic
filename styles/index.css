@@ -1,0 +1,36 @@
+/* Estilos básicos */
+body {
+    background-color: #f1f3f5;
+}
+
+.online-users {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustes para pantallas medianas */
+@media (max-width: 768px) {
+    .online-users {
+        padding: 1.5rem;
+    }
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 480px) {
+    .online-users {
+        width: 90%;
+        padding: 1rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    button {
+        width: 100%;
+    }
+}
