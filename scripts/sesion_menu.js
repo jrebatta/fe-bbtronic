@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const sessionToken = localStorage.getItem("sessionToken");
     if (!sessionToken || !username) {
-        window.location.href = "/pages/menu_juego.html";
+        window.location.href = "/pages/index.html";
         return;
     }
 
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
                     localStorage.removeItem("sessionToken");
                     localStorage.removeItem("username");
-                    window.location.href = "/pages/menu_juego.html";
+                    window.location.href = "/pages/index.html";
                 } else {
                     alert("Error al cerrar sesión.");
                 }
