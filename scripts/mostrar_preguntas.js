@@ -10,7 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Conectar al WebSocket y suscribirse al canal
     stompClient.connect({}, function () {
         stompClient.subscribe(`/topic/${sessionCode}`, function (message) {
+            console.log("Mensaje recibido por WebSocket:", message.body);
+
             if (message.body === "update") {
+                console.log("Evento 'update' recibido. Actualizando la pregunta actual.");
                 displayCurrentQuestion(); // Actualizar la pregunta actual cuando se recibe el evento
             }
         });
@@ -48,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data) {
+                    console.log("Pregunta actual recibida:", data);
                     document.getElementById("fromUser").textContent = data.fromUser || "Anónimo";
                     document.getElementById("toUser").textContent = data.toUser;
                     document.getElementById("questionText").textContent = data.question;
@@ -67,6 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!response.ok) {
                     throw new Error("Error al avanzar a la siguiente pregunta");
                 }
+
+                console.log("Siguiente pregunta solicitada. Enviando evento de actualización.");
+                // Enviar evento de actualización a través del WebSocket
+                stompClient.send(`/app/updateQuestion/${sessionCode}`, {}, "update");
             })
             .catch(error => {
                 console.error("Error al avanzar a la siguiente pregunta:", error);
