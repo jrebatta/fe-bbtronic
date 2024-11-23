@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("sessionCode").textContent = sessionCode;
 
     // Conexión al WebSocket
-    const socket = new SockJS('http://192.168.18.18:8080/websocket');
+    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Mostrar botón de iniciar juego si es el creador
-        fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}`)
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
             .then(response => response.json())
             .then(data => {
                 if (data.creator === username) {
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Botón para iniciar el juego
     document.getElementById("startGameButton").addEventListener("click", function () {
-        fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}/start-game`, {
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/start-game`, {
             method: "POST"
         })
             .then(response => {
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Botón para salir de la sesión
     document.getElementById("logoutButton").addEventListener("click", function () {
-        fetch(`http://192.168.18.18:8080/api/users/logout?sessionToken=${sessionToken}`, {
+        fetch(`https://be-bbtronic.onrender.com/api/users/logout?sessionToken=${sessionToken}`, {
             method: "DELETE"
         })
             .then(response => response.text())
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Cargar usuarios al inicializar
     function loadInitialUsers() {
-        fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}/users`)
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/users`)
             .then(response => response.json())
             .then(data => updateUserList(data.users))
             .catch(error => {

@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let questionsSent = false;
 
-    const socket = new SockJS('http://192.168.18.18:8080/websocket');
+    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Cargar la lista de usuarios y generar inputs de preguntas
     function loadUsers() {
-        fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}/users`)
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/users`)
             .then(response => response.json())
             .then(data => {
                 if (data.users && Array.isArray(data.users)) {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
                 let questionsSent = false;
             
-                const socket = new SockJS('http://192.168.18.18:8080/websocket');
+                const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
                 const stompClient = Stomp.over(socket);
             
                 stompClient.connect({}, function () {
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
                 // Cargar la lista de usuarios y generar inputs de preguntas
                 function loadUsers() {
-                    fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}/users`, {
+                    fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/users`, {
                         method: "GET",
                         mode: "no-cors", // Agregado para evitar restricciones CORS
                     })
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const toUser = input.dataset.toUser;
             
                         if (question) {
-                            fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}/send-question`, {
+                            fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/send-question`, {
                                 method: "POST",
                                 mode: "no-cors", // Agregado para evitar restricciones CORS
                                 headers: {
@@ -139,13 +139,13 @@ document.addEventListener('DOMContentLoaded', function () {
             
                 // Marcar al usuario como listo y verificar si todos están listos
                 function setUserReady() {
-                    fetch(`http://192.168.18.18:8080/api/users/${username}/ready`, {
+                    fetch(`https://be-bbtronic.onrender.com/api/users/${username}/ready`, {
                         method: "POST",
                         mode: "no-cors", // Agregado para evitar restricciones CORS
                     })
                     .then(() => {
                         console.log("Usuario marcado como listo. Verificando si todos están listos...");
-                        fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}/check-all-ready`, {
+                        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/check-all-ready`, {
                             method: "GET",
                             mode: "no-cors", // Agregado para evitar restricciones CORS
                         })
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const toUser = input.dataset.toUser;
 
             if (question) {
-                fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}/send-question`, {
+                fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/send-question`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -222,13 +222,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Marcar al usuario como listo y verificar si todos están listos
     function setUserReady() {
-        fetch(`http://192.168.18.18:8080/api/users/${username}/ready`, {
+        fetch(`https://be-bbtronic.onrender.com/api/users/${username}/ready`, {
             method: "POST",
             mode: "no-cors", // Agregado para evitar restricciones CORS
         })
             .then(() => {
                 console.log("Usuario marcado como listo. Verificando si todos están listos...");
-                fetch(`http://192.168.18.18:8080/api/game-sessions/${sessionCode}/check-all-ready`)
+                fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/check-all-ready`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.allReady) {
