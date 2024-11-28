@@ -63,15 +63,21 @@ document.addEventListener('DOMContentLoaded', function () {
     // Avanza a la siguiente pregunta (sólo el creador puede hacerlo)
     function goToNextQuestion() {
         const lastToUser = document.getElementById("toUser")?.textContent || "";
-
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/next-random-question?lastToUser=${lastToUser}`, {
-            method: "POST"
+    
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/next-random-question`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                lastToUser: lastToUser
+            })
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al avanzar a la siguiente pregunta");
                 }
-
+    
                 console.log("Siguiente pregunta solicitada. Enviando evento de actualización.");
                 // Enviar evento de actualización a través del WebSocket
                 stompClient.send(`/app/updateQuestion/${sessionCode}`, {}, "update");
@@ -81,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert("No se pudo avanzar a la siguiente pregunta. Por favor, inténtalo de nuevo.");
             });
     }
+    
 
     // Inicialización
     loadInitialData();
