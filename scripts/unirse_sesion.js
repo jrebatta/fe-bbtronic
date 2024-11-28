@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sessionCode = document.getElementById("sessionCode").value;
         const username = document.getElementById("username").value;
 
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/join`, {
+        fetch(`http://localhost:8080/api/game-sessions/join`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

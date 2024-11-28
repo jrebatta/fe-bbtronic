@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         const username = document.getElementById("username").value;
 
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/create?username=${username}`, {
+        fetch(`http://localhost:8080/api/game-sessions/create?username=${username}`, {
             method: "POST"
         })
         .then(response => {

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const username = urlParams.get('username');
     let creatorName = "";
 
-    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
+    const socket = new SockJS('http://localhost:8080/websocket');
     const stompClient = Stomp.over(socket);
 
     // Conectar al WebSocket y suscribirse al canal
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Carga inicial de datos para obtener el nombre del creador
     function loadInitialData() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
+        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}`)
             .then(response => response.json())
             .then(data => {
                 creatorName = data.creator;
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Muestra la pregunta actual desde el backend
     function displayCurrentQuestion() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/current-question`)
+        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}/current-question`)
             .then(response => response.json())
             .then(data => {
                 if (data) {
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function goToNextQuestion() {
         const lastToUser = document.getElementById("toUser")?.textContent || "";
     
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/next-random-question`, {
+        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}/next-random-question`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

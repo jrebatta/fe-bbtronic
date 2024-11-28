@@ -12,41 +12,40 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("sessionCode").textContent = sessionCode;
 
     // Conexión al WebSocket
-    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
+    const socket = new SockJS('http://localhost:8080/websocket');
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
-        console.log("WebSocket conectado");
+        console.log("WebSocket conectado.");
 
         // Suscribirse al canal de la sesión para actualizaciones
         stompClient.subscribe(`/topic/${sessionCode}`, function (message) {
             try {
                 const parsedMessage = JSON.parse(message.body);
-
-                // Si el juego ha comenzado
+        
                 if (parsedMessage.event === "gameStarted") {
                     console.log("Juego iniciado, redirigiendo...");
                     window.location.href = `preguntas_incomodas.html?sessionCode=${sessionCode}&username=${username}`;
                 }
-
-                // Si hay una actualización de la lista de usuarios
-                if (parsedMessage.event === "userUpdate") {
-                    console.log("Actualizando lista de usuarios:", parsedMessage.users);
-                    updateUserList(parsedMessage.users);
+        
+                if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
+                    console.log("Lista de usuarios actualizada:", parsedMessage.users);
+                    updateUserList(parsedMessage.users); // Actualiza usuarios al recibir el evento
                 }
             } catch (error) {
                 console.error("Error al procesar el mensaje del WebSocket:", error);
             }
         });
+        
     }, function (error) {
-        console.error("Error al conectar al WebSocket:", error);
+        console.error("Error en la conexión del WebSocket:", error);
         document.getElementById("error").textContent = "No se pudo conectar al servidor. Intenta recargar la página.";
     });
 
     // Actualizar la lista de usuarios en la UI
     function updateUserList(users) {
         const userList = document.getElementById("userList");
-        userList.innerHTML = "";
+        userList.innerHTML = ""; // Limpia la lista actual
 
         if (!Array.isArray(users)) {
             console.error("Formato de usuarios inválido:", users);
@@ -55,31 +54,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         users.forEach(user => {
             const li = document.createElement("li");
-            li.textContent = user.username;
+            li.textContent = `${user.username} ${user.ready ? '(Listo)' : ''}`;
             userList.appendChild(li);
         });
-
-        // Mostrar botón de iniciar juego si es el creador
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al obtener los datos de la sesión.");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.creator === username) {
-                    document.getElementById("startGameButton").style.display = "block";
-                } else {
-                    document.getElementById("startGameButton").style.display = "none";
-                }
-            })
-            .catch(error => console.error("Error al verificar el creador:", error));
     }
 
     // Botón para iniciar el juego
     document.getElementById("startGameButton").addEventListener("click", function () {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/start-game`, {
+        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}/start-game`, {
             method: "POST"
         })
             .then(response => {
@@ -95,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Botón para salir de la sesión
     document.getElementById("logoutButton").addEventListener("click", function () {
-        fetch(`https://be-bbtronic.onrender.com/api/users/logout?sessionToken=${sessionToken}`, {
+        fetch(`http://localhost:8080/api/users/logout?sessionToken=${sessionToken}`, {
             method: "DELETE"
         })
             .then(response => response.text())
@@ -114,22 +96,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Cargar usuarios al inicializar
     function loadInitialUsers() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/users`)
+        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Error al cargar usuarios iniciales.");
+                    throw new Error("Error al cargar los datos de la sesión.");
                 }
                 return response.json();
             })
             .then(data => {
                 console.log("Usuarios iniciales cargados:", data.users);
-                updateUserList(data.users);
+                if (data.creator === username) {
+                    document.getElementById("startGameButton").style.display = "block";
+                } else {
+                    document.getElementById("startGameButton").style.display = "none";
+                }
+                updateUserList(data.users); // Actualiza la lista de usuarios iniciales
             })
             .catch(error => {
                 console.error("Error al cargar usuarios iniciales:", error);
                 document.getElementById("error").textContent = "Error al cargar usuarios en la sesión.";
             });
     }
+    
 
     // Inicializar carga de usuarios
     loadInitialUsers();

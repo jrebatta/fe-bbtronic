@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://be-bbtronic.onrender.com'; // URL del backend
+const API_BASE_URL = 'http://localhost:8080'; // URL del backend
 
 async function simpleFetch(url, options = {}) {
     const response = await fetch(`${API_BASE_URL}${url}`, options);
