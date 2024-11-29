@@ -1,0 +1,190 @@
+#background-animation {
+    background-image: url("https://i.pinimg.com/736x/ec/72/25/ec7225c7df89b3b7d2d9f40ee9809d55.jpg"); 
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: cascade-animation 30s infinite linear;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+    z-index: 1;
+}
+
+.game-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 7rem;
+    text-align: center;
+    color: #fff;
+    text-transform: uppercase; 
+    letter-spacing: 5px; 
+    text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.8); 
+    animation: fadeIn 2s ease-out, glow 1.5s ease-in-out infinite alternate; 
+    margin-bottom: 4cm;
+    font-weight: bold;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.game-buttons-container {
+    display: flex;
+    flex-direction: column;  
+    gap: 15px;           
+    width: 100%;           
+    align-items: center; 
+    margin-bottom: 6cm;  
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #141414;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+button{
+    color: white;
+}
+.btn-purple {
+    background-color: #9c27b0;
+    border: none;
+}
+
+.btn-purple:hover {
+    background-color: #8e24aa;
+}
+
+.btn-pink {
+    background-color: #e91e63;
+    border: none;
+}
+
+.btn-pink:hover {
+    background-color: #d81b60;
+}
+
+@keyframes cascade-animation {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 50% 50%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+
+.d-grid {
+    display: flex;              
+    flex-direction: column;      
+    align-items: center;        
+    gap: 1.5rem;              
+    width: 100%;                
+    max-width: 600px;           
+    margin: 0 auto;       
+    margin-bottom: 6cm;       
+}
+
+.neon-button {
+    font-size: 1.5rem;
+    padding: 15px 30px;
+    width: 100%;  
+    max-width: 600px;
+    background-color: transparent;
+    border: 2px solid #e600ff;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 0 5px #e600ff, 0 0 10px #e600ff, 0 0 15px #e600ff, 0 0 20px #e600ff;
+    transition: all 0.3s ease-in-out;
+    margin-bottom: 0.8cm;
+}
+
+.neon-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #e600ff;
+    border-radius: 10px;
+    opacity: 0.3;
+    filter: blur(5px);
+    z-index: -1;
+    animation: glowing 1.5s infinite ease-in-out;
+}
+
+/* Animación para el brillo del botón */
+@keyframes glowing {
+    0% {
+        box-shadow: 0 0 5px #e600ff, 0 0 10px #e600ff, 0 0 15px #e600ff, 0 0 20px #e600ff;
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 10px #e600ff, 0 0 20px #e600ff, 0 0 30px #e600ff, 0 0 40px #e600ff;
+        transform: scale(1.05);
+    }
+    100% {
+        box-shadow: 0 0 5px #e600ff, 0 0 10px #e600ff, 0 0 15px #e600ff, 0 0 20px #e600ff;
+        transform: scale(1);
+    }
+}
+
+.neon-button:hover {
+    background-color: #e600ff;
+    color: #141414;
+    box-shadow: 0 0 20px #e600ff, 0 0 30px #e600ff, 0 0 40px #e600ff, 0 0 50px #e600ff;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    0% {
+        text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.8);
+        color: #fff;
+    }
+    50% {
+        text-shadow: 0px 0px 25px rgba(255, 255, 255, 1), 0px 0px 35px rgba(255, 255, 255, 0.6);
+        color: #f50057; /* Color brillante al centro del ciclo */
+    }
+    100% {
+        text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6), 0px 0px 25px rgba(255, 255, 255, 0.8);
+        color: #fff;
+    }
+}
+
+.game-title:hover {
+    transform: scale(1.1); /* Efecto al pasar el mouse */
+    color: #9c27b0; /* Cambio de color al pasar el mouse */
+    text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7), 0px 0px 30px rgba(255, 255, 255, 0.9); /* Sombra más fuerte al hacer hover */
+}
+
+h1{
+    color: white;
+}
