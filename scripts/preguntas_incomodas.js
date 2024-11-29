@@ -42,16 +42,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 return response.json();
             })
-            .then(users => {
-                if (Array.isArray(users)) {
-                    console.log("Usuarios cargados:", users);
-                    users.forEach(user => {
+            .then(data => {
+                if (data.users && Array.isArray(data.users)) {
+                    console.log("Usuarios cargados:", data.users);
+                    data.users.forEach(user => {
                         if (user.username !== username) { // Excluir al usuario actual
                             createQuestionInput(user.username);
                         }
                     });
                 } else {
-                    console.error("Formato de usuarios inválido:", users);
+                    console.error("Formato de usuarios inválido:", data.users);
                 }
             })
             .catch(error => {
