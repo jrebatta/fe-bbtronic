@@ -1,0 +1,155 @@
+/* Estilo general */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #FFFFFF;
+    overflow: hidden;
+    background-color: #121212;
+}
+
+/* Video de fondo */
+#backgroundVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Contenedor principal */
+.container {
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 20px;
+    padding-top: 10px;
+}
+
+/* Título principal */
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px #FFFFFF, 0 0 15px #FFFFFF;
+}
+
+/* Código de sesión */
+p {
+    font-size: 18px;
+    color: #FFFFFF;
+    margin: 10px 0;
+    text-shadow: 0 0 3px #FFFFFF;
+}
+
+/* Subtítulos */
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px #FFFFFF;
+}
+
+/* Lista de usuarios */
+#userList {
+    list-style: none;
+    padding: 0;
+    margin: 10px auto 0; /* Reduce el margen superior para acercar la lista al título */
+    display: flex; /* Usar flexbox para controlar los elementos */
+    flex-direction: column; /* Mostrar los usuarios en columna */
+    gap: 10px; /* Espaciado entre elementos */
+    background: transparent; /* Fondo para resaltar la lista */
+    border: transparent; /* Bordes para la lista completa */
+    border-radius: 8px;
+    max-height: 300px; /* Altura máxima para el contenedor */
+    overflow-y: auto; /* Habilitar scroll vertical */
+    padding: 10px; /* Espaciado interno */
+}
+    
+
+/* Elementos de la lista */
+#userList .list-group-item {
+    background: #1a1a1a; /* Fondo de cada casilla */
+    color: #FFFFFF; /* Texto blanco */
+    padding: 5px 10px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    text-align: center; /* Centrar el texto */
+    border: 1px solid #FFFFFF; /* Bordes individuales para cada casilla */
+    border-radius: 5px; /* Bordes redondeados */
+    white-space: nowrap; /* Evitar que el texto se divida */
+    overflow: hidden; /* Esconder texto que exceda el contenedor */
+    text-overflow: ellipsis; /* Mostrar puntos suspensivos si el texto es muy largo */
+    width: auto; /* Ajustar el ancho automáticamente al contenido */
+    max-width: 90%; /* Limitar el ancho máximo de cada casilla */
+    margin: 0 auto; /* Centrar cada casilla */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para separar visualmente */
+}
+
+/* Hover para elementos de la lista */
+#userList .list-group-item:hover {
+    background: #007bff; /* Cambiar el fondo al pasar el cursor */
+    color: #FFFFFF; /* Mantener el texto blanco */
+    box-shadow: 0 0 10px #007bff, 0 0 20px #007bff;
+    transform: scale(1.05); /* Aumentar ligeramente el tamaño */
+    transition: all 0.3s ease; /* Suavizar la transición */
+}
+
+
+
+
+/* Botones */
+button {
+    font-size: 16px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 200px;
+    text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
+}
+
+/* Botón primario */
+.btn-primary {
+    color: #FFFFFF;
+    background-color: #007bff;
+    border: none;
+    box-shadow: 0 0 5px #007bff, 0 0 15px #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 0 10px #0056b3, 0 0 20px #0056b3;
+}
+
+/* Botón de peligro */
+.btn-danger {
+    color: #FFFFFF;
+    background-color: #dc3545;
+    border: none;
+    box-shadow: 0 0 5px #dc3545, 0 0 15px #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #b02a37;
+    box-shadow: 0 0 10px #b02a37, 0 0 20px #b02a37;
+}
+
+/* Mensajes de error */
+#error {
+    font-size: 14px;
+    color: #ff4d4d;
+    text-align: center;
+    margin-top: 10px;
+}

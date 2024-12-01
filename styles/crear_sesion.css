@@ -1,0 +1,135 @@
+/* Estilo general */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #FFFFFF;
+    overflow: hidden;
+    background-color: #121212; /* Fondo oscuro como respaldo */
+}
+
+/* Video de fondo */
+#backgroundVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que el video cubra toda la pantalla */
+    z-index: -1; /* Ubicar el video detrás del contenido */
+}
+
+/* Contenedor principal */
+.container {
+    z-index: 1; /* Asegura que el contenido esté sobre el video */
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Alinear elementos en columna */
+    justify-content: center;
+    align-items: center; /* Centrar elementos horizontalmente */
+    height: 100%; /* Asegura que el contenedor ocupe toda la altura */
+    gap: 20px; /* Espacio uniforme entre elementos */
+}
+
+/* Título principal */
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin: 0; /* Sin márgenes extras */
+    text-transform: uppercase;
+    text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
+}
+
+/* Input del formulario */
+form {
+    width: 100%;
+    max-width: 400px; /* Ancho máximo para formularios */
+}
+
+form .form-control {
+    background: #000000;
+    color: #FFFFFF; /* Texto del input blanco */
+    border: 2px solid #FFFFFF;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    width: 70%; /* Input ocupa todo el ancho disponible */
+    text-align: center; /* Centrar texto dentro del input */
+}
+
+/* Placeholder desaparece al hacer foco */
+form .form-control:focus::placeholder {
+    color: transparent; /* Hacer el placeholder invisible */
+}
+
+form .form-control::placeholder {
+    color: #FFFFFF; /* Texto del placeholder también blanco */
+}
+
+form .form-control:focus {
+    background: #000000;
+    color: #FFFFFF; /* Mantener el texto blanco al enfocar */
+    box-shadow: 0 0 5px #ffffff;
+    outline: none;
+}
+
+/* Botón de envío */
+form button[type="submit"] {
+    font-size: 15px; /* Tamaño de texto más pequeño */
+    color: #FFFFFF;
+    background: #000000;
+    border: 2px solid #FFFFFF;
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 10px 20px; /* Tamaño reducido del botón */
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto; /* Centrar el botón horizontalmente */
+    max-width: 160px; /* Limitar el ancho máximo del botón */
+    margin-top: 20px; /* Espacio respecto al formulario */
+}
+
+form button[type="submit"]:hover {
+    background: #bb00ff; /* Cambiar fondo al azul */
+    color: #FFFFFF;
+    border-color: #bb00ff; /* Cambiar borde al azul */
+    transform: scale(1.05);
+    text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
+}
+
+/* Mensajes de error */
+#error {
+    margin-top: 20px; /* Espacio respecto al formulario */
+    font-size: 20px;
+    color: #ff4d4d;
+    text-align: center; /* Centrar mensajes de error */
+}
+
+/* Información de sesión */
+#sessionInfo {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center; /* Centrar texto dentro del contenedor */
+    margin-top: 20px; /* Espacio respecto al formulario */
+}
+
+#sessionInfo h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 10px 0; /* Espacio inferior únicamente */
+    color: #FFFFFF;
+}
+
+#sessionInfo p {
+    font-size: 16px;
+    color: #FFFFFF;
+    margin: 5px 0; /* Márgenes uniformes arriba y abajo */
+}

@@ -1,36 +1,66 @@
-/* Estilos básicos */
+/* Estilo general */
 body {
-    background-color: #f1f3f5;
+    margin: 0;
+    font-family: 'Roboto', sans-serif; /* Cambia la fuente a Roboto */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #FFFFFF;
+    overflow: hidden;
+    background-color: #121212; /* Fondo oscuro como respaldo */
 }
 
-.online-users {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Video de fondo */
+#backgroundVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que el video cubra toda la pantalla */
+    z-index: -1; /* Ubicar el video detrás del contenido */
 }
 
-/* Ajustes para pantallas medianas */
-@media (max-width: 768px) {
-    .online-users {
-        padding: 1.5rem;
-    }
+/* Contenedor principal */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Coloca los botones más abajo */
+    text-align: center;
+    z-index: 1; /* Contenido sobre el video */
+    padding-top: 60px; /* Ajusta la distancia desde la parte superior */
 }
 
-/* Ajustes para pantallas pequeñas */
-@media (max-width: 480px) {
-    .online-users {
-        width: 90%;
-        padding: 1rem;
-    }
+/* Contenedor de botones */
+.game-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Aumenta el espacio entre los botones */
+}
 
-    h2 {
-        font-size: 1.5rem;
-    }
+/* Botones estilo neón */
+.neon-button {
+    font-size: 25px; /* Tamaño del texto */
+    color: #ffffff; /* Color del texto */
+    text-decoration: none; /* Sin subrayado */
+    font-weight: bold;
+    margin-bottom: 30px;
+    padding: 8px 16px; /* Reducir espacio interno para acercar texto al borde */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    background: transparent; /* Fondo transparente */
+    border: 2px solid #ffffff; /* Borde de color blanco */
+    border-radius: 8px; /* Bordes redondeados */
+    position: relative; /* Necesario para efectos pseudo */
+    cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+    transition: all 0.3s ease; /* Transiciones suaves */
+    text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
+}
 
-    button {
-        width: 100%;
-    }
+/* Efecto hover para botones */
+.neon-button:hover {
+    background: #000000; /* Cambiar fondo al color negro */
+    color: #ffffff; /* Mantener el texto en blanco */
+    border: 2px solid #ffffff; /* Cambiar borde al color negro */
+    transform: scale(1.11); /* Agrandar ligeramente más el botón */
 }
