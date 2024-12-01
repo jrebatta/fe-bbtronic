@@ -137,10 +137,14 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.allReady) {
                     stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "allReady" }));
+                } else {
+                    // Mostrar el mensaje en pantalla
+                    errorElement.textContent = data.message || "Aún faltan usuarios por estar listos.";
                 }
             })
             .catch(error => console.error("Error al verificar si todos están listos:", error));
     }
+    
 
     // Inicialización
     loadUsers();
