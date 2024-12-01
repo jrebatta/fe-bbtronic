@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let questionsSent = false;
 
-    const socket = new SockJS('http://localhost:8080/websocket');
+    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Cargar la lista de usuarios y generar inputs de preguntas
     function loadUsers() {
-        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}/users`)
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/users`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al cargar usuarios.");
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const toUser = input.dataset.toUser;
 
             if (question) {
-                fetch(`http://localhost:8080/api/game-sessions/${sessionCode}/send-question`, {
+                fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/send-question`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Marcar al usuario como listo y verificar si todos están listos
     function setUserReady() {
-        fetch(`http://localhost:8080/api/users/${username}/ready`, {
+        fetch(`https://be-bbtronic.onrender.com/api/users/${username}/ready`, {
             method: "POST"
         })
             .then(() => {
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Verificar si todos los usuarios están listos
     function checkAllReady() {
-        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}/check-all-ready`)
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/check-all-ready`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al verificar si todos están listos.");
