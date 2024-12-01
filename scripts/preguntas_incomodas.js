@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Cargar la lista de usuarios y generar inputs de preguntas
     function loadUsers() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/users`)
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al cargar usuarios.");

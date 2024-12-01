@@ -32,9 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     window.location.href = `preguntas_incomodas.html?sessionCode=${sessionCode}&username=${username}`;
                 }
 
-                if (parsedMessage.event === "userUpdate") {
-                    console.log("Evento recibido: Lista de usuarios actualizada");
-                    loadUsersFromServer(); // Actualiza la lista consultando el servidor
+                if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
+                    console.log("Lista de usuarios actualizada:", parsedMessage.users);
+                    updateUserList(parsedMessage.users); // Actualiza usuarios al recibir el evento
                 }
             } catch (error) {
                 console.error("Error al procesar el mensaje del WebSocket:", error);
@@ -44,6 +44,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }, function (error) {
         console.error("Error en la conexión del WebSocket:", error);
         document.getElementById("error").textContent = "No se pudo conectar al servidor. Intenta recargar la página.";
+    });
+
+    // Botón para iniciar el juego
+    document.getElementById("startGameButton").addEventListener("click", function () {
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/start-game`, {
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Juego iniciado. Enviando evento a través del WebSocket.");
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "gameStarted" }));
+                } else {
+                    throw new Error("Error al iniciar el juego.");
+                }
+            })
+            .catch(error => console.error("Error al iniciar el juego:", error));
     });
 
     // Botón para salir de la sesión
@@ -71,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error("Error cerrando sesión:", error));
     });
 
-    // Función para cargar usuarios desde el servidor
-    function loadUsersFromServer() {
+    // Cargar usuarios al inicializar
+    function loadInitialUsers() {
         fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
             .then(response => {
                 if (!response.ok) {
@@ -81,20 +97,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                console.log("Usuarios cargados desde el servidor:", data.users);
-
-                // Mostrar u ocultar el botón de iniciar juego según el creador
+                console.log("Usuarios iniciales cargados:", data.users);
                 if (data.creator === username) {
                     document.getElementById("startGameButton").style.display = "block";
                 } else {
                     document.getElementById("startGameButton").style.display = "none";
                 }
-
-                updateUserList(data.users); // Actualiza la lista de usuarios
+                updateUserList(data.users); // Actualiza la lista de usuarios iniciales
             })
             .catch(error => {
-                console.error("Error al cargar usuarios desde el servidor:", error);
-                document.getElementById("error").textContent = "Error al cargar usuarios desde el servidor.";
+                console.error("Error al cargar usuarios iniciales:", error);
+                document.getElementById("error").textContent = "Error al cargar usuarios en la sesión.";
             });
     }
 
@@ -117,5 +130,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Inicializar y cargar usuarios al cargar la página
-    loadUsersFromServer();
+    loadInitialUsers();
 });
