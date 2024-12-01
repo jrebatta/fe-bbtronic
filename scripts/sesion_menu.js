@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const sessionCode = urlParams.get('sessionCode');
     const username = urlParams.get('username');
 
+    // Eliminar la cadena de consulta de la URL
+    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+
     const sessionToken = localStorage.getItem("sessionToken");
     if (!sessionToken || !username) {
         window.location.href = "/index.html";

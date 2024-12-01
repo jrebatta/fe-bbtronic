@@ -1,15 +1,22 @@
-function validateInputLength(input) {
-    // Limitar la entrada a 4 caracteres
-    if (input.value.length > 4) {
-        input.value = input.value.slice(0, 4); // Truncar a los primeros 4 dígitos
-    }
-}
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById("joinSessionForm");
     const submitButton = document.querySelector("#joinSessionForm button[type='submit']");
     const errorElement = document.getElementById("error");
+
+    // Eliminar la cadena de consulta de la URL
+    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+
+    
+    function validateInputLength(input) {
+            // Limitar la entrada a 4 caracteres
+            if (input.value.length > 4) {
+                input.value = input.value.slice(0, 4); // Truncar a los primeros 4 dígitos
+            }
+    }
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
