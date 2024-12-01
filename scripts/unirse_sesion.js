@@ -1,3 +1,11 @@
+function validateInputLength(input) {
+    // Limitar la entrada a 4 caracteres
+    if (input.value.length > 4) {
+        input.value = input.value.slice(0, 4); // Truncar a los primeros 4 dígitos
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById("joinSessionForm");
     const submitButton = document.querySelector("#joinSessionForm button[type='submit']");
@@ -40,4 +48,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Error:", error.message);
             });
     });
+
 });

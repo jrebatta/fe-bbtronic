@@ -22,25 +22,77 @@ document.addEventListener('DOMContentLoaded', function () {
         stompClient.subscribe(`/topic/${sessionCode}`, function (message) {
             try {
                 const parsedMessage = JSON.parse(message.body);
-        
+
                 if (parsedMessage.event === "gameStarted") {
                     console.log("Juego iniciado, redirigiendo...");
                     window.location.href = `preguntas_incomodas.html?sessionCode=${sessionCode}&username=${username}`;
                 }
-        
-                if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
-                    console.log("Lista de usuarios actualizada:", parsedMessage.users);
-                    updateUserList(parsedMessage.users); // Actualiza usuarios al recibir el evento
+
+                if (parsedMessage.event === "userUpdate") {
+                    console.log("Evento recibido: Lista de usuarios actualizada");
+                    loadUsersFromServer(); // Actualiza la lista consultando el servidor
                 }
             } catch (error) {
                 console.error("Error al procesar el mensaje del WebSocket:", error);
             }
         });
-        
+
     }, function (error) {
         console.error("Error en la conexión del WebSocket:", error);
         document.getElementById("error").textContent = "No se pudo conectar al servidor. Intenta recargar la página.";
     });
+
+    // Botón para salir de la sesión
+    document.getElementById("logoutButton").addEventListener("click", function () {
+        fetch(`http://localhost:8080/api/users/logout?sessionToken=${sessionToken}`, {
+            method: "DELETE"
+        })
+            .then(response => response.text())
+            .then(message => {
+                if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
+                    console.log("Sesión cerrada correctamente.");
+
+                    // Notificar al servidor y a los demás clientes
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+                        event: "userUpdate"
+                    }));
+
+                    localStorage.removeItem("sessionToken");
+                    localStorage.removeItem("username");
+                    window.location.href = "/index.html";
+                } else {
+                    alert("Error al cerrar sesión.");
+                }
+            })
+            .catch(error => console.error("Error cerrando sesión:", error));
+    });
+
+    // Función para cargar usuarios desde el servidor
+    function loadUsersFromServer() {
+        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al cargar los datos de la sesión.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Usuarios cargados desde el servidor:", data.users);
+
+                // Mostrar u ocultar el botón de iniciar juego según el creador
+                if (data.creator === username) {
+                    document.getElementById("startGameButton").style.display = "block";
+                } else {
+                    document.getElementById("startGameButton").style.display = "none";
+                }
+
+                updateUserList(data.users); // Actualiza la lista de usuarios
+            })
+            .catch(error => {
+                console.error("Error al cargar usuarios desde el servidor:", error);
+                document.getElementById("error").textContent = "Error al cargar usuarios desde el servidor.";
+            });
+    }
 
     // Actualizar la lista de usuarios en la UI
     function updateUserList(users) {
@@ -54,71 +106,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         users.forEach(user => {
             const li = document.createElement("li");
-            li.textContent = `${user.username} ${user.ready ? '(Listo)' : ''}`;
-            userList.appendChild(li);
+            li.classList.add("list-group-item"); // Clase para el estilo individual
+            li.textContent = `${user.username} ${user.ready ? '(Listo)' : ''}`; // Texto con estado
+            userList.appendChild(li); // Agregar al contenedor de lista
         });
     }
 
-    // Botón para iniciar el juego
-    document.getElementById("startGameButton").addEventListener("click", function () {
-        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}/start-game`, {
-            method: "POST"
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log("Juego iniciado. Enviando evento a través del WebSocket.");
-                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "gameStarted" }));
-                } else {
-                    throw new Error("Error al iniciar el juego.");
-                }
-            })
-            .catch(error => console.error("Error al iniciar el juego:", error));
-    });
-
-    // Botón para salir de la sesión
-    document.getElementById("logoutButton").addEventListener("click", function () {
-        fetch(`http://localhost:8080/api/users/logout?sessionToken=${sessionToken}`, {
-            method: "DELETE"
-        })
-            .then(response => response.text())
-            .then(message => {
-                if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
-                    console.log("Sesión cerrada correctamente.");
-                    localStorage.removeItem("sessionToken");
-                    localStorage.removeItem("username");
-                    window.location.href = "/index.html";
-                } else {
-                    alert("Error al cerrar sesión.");
-                }
-            })
-            .catch(error => console.error("Error cerrando sesión:", error));
-    });
-
-    // Cargar usuarios al inicializar
-    function loadInitialUsers() {
-        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al cargar los datos de la sesión.");
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("Usuarios iniciales cargados:", data.users);
-                if (data.creator === username) {
-                    document.getElementById("startGameButton").style.display = "block";
-                } else {
-                    document.getElementById("startGameButton").style.display = "none";
-                }
-                updateUserList(data.users); // Actualiza la lista de usuarios iniciales
-            })
-            .catch(error => {
-                console.error("Error al cargar usuarios iniciales:", error);
-                document.getElementById("error").textContent = "Error al cargar usuarios en la sesión.";
-            });
-    }
-    
-
-    // Inicializar carga de usuarios
-    loadInitialUsers();
+    // Inicializar y cargar usuarios al cargar la página
+    loadUsersFromServer();
 });
