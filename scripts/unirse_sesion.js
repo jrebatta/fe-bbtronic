@@ -1,6 +1,3 @@
-
-
-
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById("joinSessionForm");
     const submitButton = document.querySelector("#joinSessionForm button[type='submit']");

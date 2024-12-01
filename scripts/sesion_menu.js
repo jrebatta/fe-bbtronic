@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log("Lista de usuarios actualizada:", parsedMessage.users);
                     updateUserList(parsedMessage.users); // Actualiza usuarios al recibir el evento
                 }
+
+                if (parsedMessage.event === "userLeft" && parsedMessage.username) {
+                    console.log(`Usuario ${parsedMessage.username} salió de la sesión.`);
+                    removeUserFromList(parsedMessage.username); // Elimina solo al usuario que salió
+                }
             } catch (error) {
                 console.error("Error al procesar el mensaje del WebSocket:", error);
             }
@@ -72,9 +77,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
                     console.log("Sesión cerrada correctamente.");
 
-                    // Notificar al servidor y a los demás clientes
+                    // Notificar al servidor que el usuario salió
                     stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
-                        event: "userUpdate"
+                        event: "userLeft",
+                        username: username
                     }));
 
                     localStorage.removeItem("sessionToken");
@@ -125,8 +131,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const li = document.createElement("li");
             li.classList.add("list-group-item"); // Clase para el estilo individual
             li.textContent = `${user.username} ${user.ready ? '(Listo)' : ''}`; // Texto con estado
+            li.id = `user-${user.username}`; // Asigna un ID único basado en el nombre de usuario
             userList.appendChild(li); // Agregar al contenedor de lista
         });
+    }
+
+    // Eliminar un usuario específico de la lista
+    function removeUserFromList(username) {
+        const userItem = document.getElementById(`user-${username}`);
+        if (userItem) {
+            userItem.remove();
+        } else {
+            console.error(`Usuario ${username} no encontrado en la lista.`);
+        }
     }
 
     // Inicializar y cargar usuarios al cargar la página
