@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Deshabilitar el botón al inicio
         submitButton.disabled = true;
 
-        fetch(`http://localhost:8080/api/game-sessions/create?username=${username}`, {
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/create?username=${username}`, {
             method: "POST"
         })
             .then(response => {

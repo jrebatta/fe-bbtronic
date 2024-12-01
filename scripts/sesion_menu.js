@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("sessionCode").textContent = sessionCode;
 
     // Conexión al WebSocket
-    const socket = new SockJS('http://localhost:8080/websocket');
+    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Botón para salir de la sesión
     document.getElementById("logoutButton").addEventListener("click", function () {
-        fetch(`http://localhost:8080/api/users/logout?sessionToken=${sessionToken}`, {
+        fetch(`https://be-bbtronic.onrender.com/api/users/logout?sessionToken=${sessionToken}`, {
             method: "DELETE"
         })
             .then(response => response.text())
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Función para cargar usuarios desde el servidor
     function loadUsersFromServer() {
-        fetch(`http://localhost:8080/api/game-sessions/${sessionCode}`)
+        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al cargar los datos de la sesión.");
