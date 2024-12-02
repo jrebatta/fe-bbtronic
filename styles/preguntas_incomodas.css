@@ -140,23 +140,3 @@ button:hover {
     color: #ff4d4d;
     text-align: center;
 }
-
-/* Ajustes para móviles */
-@media (max-width: 576px) {
-    h2 {
-        font-size: 26px;
-    }
-
-    #questionsContainer {
-        padding: 20px;
-    }
-
-    button {
-        font-size: 18px;
-        padding: 12px 20px;
-    }
-
-    .question-item label {
-        font-size: 18px;
-    }
-}
