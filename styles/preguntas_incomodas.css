@@ -1,0 +1,162 @@
+/* Estilo general */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #FFFFFF;
+    overflow: hidden;
+    background-color: #121212; /* Fondo oscuro como respaldo */
+}
+
+/* Video de fondo */
+#backgroundVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que el video cubra toda la pantalla */
+    z-index: -1; /* Ubicar el video detrás del contenido */
+}
+
+/* Contenedor principal */
+.container {
+    z-index: 1; /* Asegura que el contenido esté sobre el video */
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Alinear elementos en columna */
+    justify-content: center;
+    align-items: center; /* Centrar elementos horizontalmente */
+    height: 100%; /* Asegura que el contenedor ocupe toda la altura */
+    gap: 30px; /* Más espacio entre los elementos */
+}
+
+/* Título principal */
+h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin: 0 0 30px; /* Espacio inferior para separación */
+    text-transform: uppercase;
+    text-shadow: 0 0 5px #FFFFFF, 0 0 15px #FFFFFF;
+}
+
+/* Contenedor de preguntas */
+#questionsContainer {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo semi-transparente */
+    padding: 30px; /* Más espacio interno */
+    border-radius: 15px; /* Bordes más redondeados */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    width: 90%; /* Reducir ligeramente el ancho */
+    max-width: 700px; /* Limitar el ancho máximo */
+    min-height: 300px; /* Más alto por defecto */
+    overflow-y: auto; /* Habilitar scroll si es necesario */
+    text-align: center; /* Centrar contenido */
+}
+
+/* Estilo de cada pregunta */
+.question-item {
+    margin-bottom: 40px; /* Espacio adicional entre preguntas */
+    text-align: center; /* Centrar cada bloque */
+}
+
+/* Etiqueta para "Pregunta para..." */
+.question-item label {
+    font-size: 20px; /* Hacer el texto más grande */
+    color: #FFFFFF;
+    display: block; /* Asegura que esté en su propia línea */
+    margin-bottom: 10px; /* Espacio entre la etiqueta y el input */
+    text-align: center; /* Centrar texto de la etiqueta */
+}
+
+/* Input para preguntas */
+.question-item input[type="text"] {
+    background: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+    color: #FFFFFF; /* Texto del input blanco */
+    border: 2px solid #FFFFFF;
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 15px 20px; /* Espaciado interno mayor */
+    font-size: 18px; /* Incrementar el tamaño del texto */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    box-sizing: border-box; /* Incluye padding y borde en el ancho */
+    transition: border-color 0.3s ease;
+    text-align: center; /* Centrar texto en el input */
+}
+
+.question-item input[type="text"]:focus {
+    border-color: #bb00ff; /* Resalta el borde en púrpura */
+    outline: none;
+    box-shadow: 0 0 10px #bb00ff;
+}
+
+/* Checkbox de anonimato */
+.form-check {
+    margin-top: 20px;
+    text-align: center; /* Centrar el checkbox */
+}
+
+.form-check-input {
+    accent-color: #bb00ff; /* Cambiar color del checkbox */
+    transform: scale(1.5); /* Aumentar tamaño */
+}
+
+.form-check-label {
+    color: #FFFFFF;
+    font-size: 16px;
+}
+
+/* Botón de envío */
+button {
+    font-size: 20px;
+    color: #FFFFFF;
+    background: #000000;
+    border: 2px solid #FFFFFF;
+    border-radius: 12px; /* Bordes redondeados */
+    padding: 15px 30px; /* Tamaño más grande */
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto; /* Centrar el botón horizontalmente */
+    max-width: 220px; /* Limitar el ancho máximo del botón */
+    margin-top: 30px; /* Espacio respecto al formulario */
+}
+
+button:hover {
+    background: #bb00ff; /* Cambiar fondo al púrpura */
+    color: #FFFFFF;
+    border-color: #bb00ff; /* Cambiar borde al púrpura */
+    transform: scale(1.1); /* Aumentar ligeramente el tamaño */
+    text-shadow: 0 0 5px #FFFFFF, 0 0 15px #FFFFFF;
+}
+
+/* Mensajes de error */
+#error {
+    margin-top: 20px; /* Espacio respecto al botón */
+    font-size: 16px;
+    color: #ff4d4d;
+    text-align: center;
+}
+
+/* Ajustes para móviles */
+@media (max-width: 576px) {
+    h2 {
+        font-size: 26px;
+    }
+
+    #questionsContainer {
+        padding: 20px;
+    }
+
+    button {
+        font-size: 18px;
+        padding: 12px 20px;
+    }
+
+    .question-item label {
+        font-size: 18px;
+    }
+}

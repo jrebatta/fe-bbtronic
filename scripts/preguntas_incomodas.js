@@ -7,12 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const anonymousCheck = document.getElementById("anonymousCheck");
     const errorElement = document.getElementById("error");
 
-    // Validar si el botón existe antes de agregar el event listener
-    if (!submitQuestionsButton) {
-        console.error("El botón 'submitQuestionsButton' no se encontró en el DOM.");
-        return;
-    }
-
     let questionsSent = false;
 
     const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
@@ -20,59 +14,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
     stompClient.connect({}, function () {
         stompClient.subscribe(`/topic/${sessionCode}`, function (message) {
-            try {
-                const parsedMessage = JSON.parse(message.body);
-
-                if (parsedMessage.event === "allReady") {
-                    console.log("Todos los usuarios están listos. Redirigiendo...");
-                    window.location.href = `mostrar_preguntas.html?sessionCode=${sessionCode}&username=${username}`;
-                }
-            } catch (error) {
-                console.error("Error al procesar el mensaje del WebSocket:", error);
+            const parsedMessage = JSON.parse(message.body);
+            if (parsedMessage.event === "allReady") {
+                window.location.href = `mostrar_preguntas.html?sessionCode=${sessionCode}&username=${username}`;
             }
         });
     });
 
-    // Cargar la lista de usuarios y generar inputs de preguntas
     function loadUsers() {
         fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al cargar usuarios.");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                if (data.users && Array.isArray(data.users)) {
-                    console.log("Usuarios cargados:", data.users);
-                    data.users.forEach(user => {
-                        if (user.username !== username) { // Excluir al usuario actual
-                            createQuestionInput(user.username);
-                        }
-                    });
-                } else {
-                    console.error("Formato de usuarios inválido:", data.users);
-                }
+                data.users.forEach(user => {
+                    if (user.username !== username) createQuestionInput(user.username);
+                });
             })
-            .catch(error => {
-                console.error("Error al cargar usuarios:", error);
-                errorElement.textContent = "Error al cargar usuarios.";
-            });
+            .catch(() => errorElement.textContent = "Error al cargar usuarios.");
     }
 
-    // Crear un campo de entrada para una pregunta hacia un usuario específico
     function createQuestionInput(toUser) {
         const questionDiv = document.createElement("div");
-        questionDiv.classList.add("mb-3");
+        questionDiv.classList.add("question-item");
 
         const label = document.createElement("label");
         label.textContent = `Pregunta para ${toUser}:`;
-        label.classList.add("form-label");
 
         const input = document.createElement("input");
         input.type = "text";
-        input.classList.add("form-control");
-        input.placeholder = `Escribe una pregunta para ${toUser}`;
         input.dataset.toUser = toUser;
 
         questionDiv.appendChild(label);
@@ -80,9 +48,8 @@ document.addEventListener('DOMContentLoaded', function () {
         questionsContainer.appendChild(questionDiv);
     }
 
-    // Enviar preguntas y marcar al usuario como listo
-    submitQuestionsButton.addEventListener("click", function () {
-        if (questionsSent) return; // Evitar duplicados
+    submitQuestionsButton.addEventListener("click", () => {
+        if (questionsSent) return;
         questionsSent = true;
 
         const inputs = questionsContainer.querySelectorAll("input");
@@ -90,62 +57,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
         inputs.forEach(input => {
             const question = input.value.trim();
-            const toUser = input.dataset.toUser;
-
-            if (question) {
-                fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/send-question`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ fromUser: username, toUser: toUser, question: question, anonymous: anonymousCheck.checked })
-                }).catch(error => console.error("Error al enviar la pregunta:", error));
-            } else {
-                questionsReady = false;
-            }
+            if (!question) questionsReady = false;
+            fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/send-question`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ fromUser: username, toUser: input.dataset.toUser, question, anonymous: anonymousCheck.checked })
+            });
         });
 
-        if (questionsReady) {
-            setUserReady();
-        } else {
+        if (questionsReady) setUserReady();
+        else {
             questionsSent = false;
-            errorElement.textContent = "Por favor, escribe todas las preguntas antes de continuar.";
+            errorElement.textContent = "Por favor, completa todas las preguntas.";
         }
     });
 
-    // Marcar al usuario como listo y verificar si todos están listos
     function setUserReady() {
-        fetch(`https://be-bbtronic.onrender.com/api/users/${username}/ready`, {
-            method: "POST"
-        })
-            .then(() => {
-                console.log("Usuario marcado como listo.");
-                checkAllReady();
-            })
-            .catch(error => console.error("Error al marcar usuario como listo:", error));
+        fetch(`https://be-bbtronic.onrender.com/api/users/${username}/ready`, { method: "POST" })
+            .then(() => stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "allReady" })));
     }
 
-    // Verificar si todos los usuarios están listos
-    function checkAllReady() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/check-all-ready`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al verificar si todos están listos.");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.allReady) {
-                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "allReady" }));
-                } else {
-                    // Mostrar el mensaje en pantalla
-                    errorElement.textContent = data.message || "Aún faltan usuarios por estar listos.";
-                }
-            })
-            .catch(error => console.error("Error al verificar si todos están listos:", error));
-    }
-    
-
-    // Inicialización
     loadUsers();
 });
