@@ -1,3 +1,5 @@
+import API_BASE_URL from './ambiente.js';
+
 document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionCode = urlParams.get('sessionCode');
@@ -9,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let questionsSent = false;
 
-    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
+    const socket = new SockJS(`${API_BASE_URL}/websocket`);
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
@@ -26,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function loadUsers() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al cargar usuarios.");
@@ -60,10 +62,10 @@ document.addEventListener('DOMContentLoaded', function () {
     submitQuestionsButton.addEventListener("click", () => {
         if (questionsSent) return;
         questionsSent = true;
-    
+
         const inputs = questionsContainer.querySelectorAll("input");
         let questionsReady = true;
-    
+
         // Verificar que todos los inputs estén completos
         inputs.forEach(input => {
             const question = input.value.trim();
@@ -71,12 +73,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 questionsReady = false;
             }
         });
-    
+
         // Solo enviar las preguntas si todos los campos están completos
         if (questionsReady) {
             inputs.forEach(input => {
                 const question = input.value.trim();
-                fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/send-question`, {
+                fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/send-question`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ fromUser: username, toUser: input.dataset.toUser, question, anonymous: anonymousCheck.checked })
@@ -89,10 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
             errorElement.textContent = "Por favor, completa todas las preguntas antes de continuar.";
         }
     });
-    
 
     function setUserReady() {
-        fetch(`https://be-bbtronic.onrender.com/api/users/${username}/ready`, { method: "POST" })
+        fetch(`${API_BASE_URL}/api/users/${username}/ready`, { method: "POST" })
             .then(() => {
                 console.log("Usuario marcado como listo.");
                 checkAllReady(); // Llama a la verificación
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function checkAllReady() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/check-all-ready`)
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/check-all-ready`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al verificar si todos están listos.");

@@ -1,3 +1,5 @@
+import API_BASE_URL from './ambiente.js';
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById("joinSessionForm");
     const submitButton = document.querySelector("#joinSessionForm button[type='submit']");
@@ -7,12 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
     window.history.replaceState({}, document.title, cleanUrl);
 
-    
     function validateInputLength(input) {
-            // Limitar la entrada a 4 caracteres
-            if (input.value.length > 4) {
-                input.value = input.value.slice(0, 4); // Truncar a los primeros 4 dígitos
-            }
+        // Limitar la entrada a 4 caracteres
+        if (input.value.length > 4) {
+            input.value = input.value.slice(0, 4); // Truncar a los primeros 4 dígitos
+        }
     }
 
     form.addEventListener("submit", function (event) {
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Deshabilitar el botón al inicio
         submitButton.disabled = true;
 
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/join`, {
+        fetch(`${API_BASE_URL}/api/game-sessions/join`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -52,5 +53,4 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Error:", error.message);
             });
     });
-
 });

@@ -1,3 +1,5 @@
+import API_BASE_URL from './ambiente.js';
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById("sessionForm");
     const submitButton = document.querySelector("#sessionForm button[type='submit']");
@@ -10,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Deshabilitar el botón al inicio
         submitButton.disabled = true;
 
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/create?username=${username}`, {
+        fetch(`${API_BASE_URL}/api/game-sessions/create?username=${username}`, {
             method: "POST"
         })
             .then(response => {

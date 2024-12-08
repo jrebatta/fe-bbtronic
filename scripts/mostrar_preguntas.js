@@ -1,10 +1,12 @@
+import API_BASE_URL from './ambiente.js';
+
 document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionCode = urlParams.get('sessionCode');
     const username = urlParams.get('username');
     let creatorName = "";
 
-    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
+    const socket = new SockJS(`${API_BASE_URL}/websocket`);
     const stompClient = Stomp.over(socket);
 
     // Conectar al WebSocket y suscribirse al canal
@@ -12,10 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
         stompClient.subscribe(`/topic/${sessionCode}`, function (message) {
             try {
                 const parsedMessage = JSON.parse(message.body);
-    
+
                 if (parsedMessage.event === "update" && parsedMessage.question) {
                     console.log("Nueva pregunta recibida por WebSocket:", parsedMessage.question);
-    
+
                     // Actualizar la UI con la nueva pregunta
                     const { fromUser, toUser, question } = parsedMessage.question;
                     document.getElementById("fromUser").textContent = fromUser || "Anónimo";
@@ -27,12 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-    
-    
 
     // Carga inicial de datos para obtener el nombre del creador
     function loadInitialData() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
             .then(response => {
                 if (!response.ok) throw new Error("Error al cargar datos iniciales");
                 return response.json();
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Muestra la pregunta actual desde el backend
     function displayCurrentQuestion() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/current-question`)
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/current-question`)
             .then(response => {
                 if (!response.ok) throw new Error("Error al obtener la pregunta actual");
                 return response.json();
@@ -82,42 +82,41 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-function goToNextQuestion() {
-    const lastToUser = document.getElementById("toUser")?.textContent || "";
+    function goToNextQuestion() {
+        const lastToUser = document.getElementById("toUser")?.textContent || "";
 
-    fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/next-random-question`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ lastToUser: lastToUser })
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error al avanzar a la siguiente pregunta");
-            }
-            return response.json(); // Parsear la respuesta JSON
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-random-question`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ lastToUser: lastToUser })
         })
-        .then(data => {
-            if (data && data.question) {
-                console.log("Siguiente pregunta recibida:", data.question);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al avanzar a la siguiente pregunta");
+                }
+                return response.json(); // Parsear la respuesta JSON
+            })
+            .then(data => {
+                if (data && data.question) {
+                    console.log("Siguiente pregunta recibida:", data.question);
 
-                // Enviar la nueva pregunta a través del WebSocket
-                stompClient.send(
-                    `/topic/${sessionCode}`,
-                    {},
-                    JSON.stringify({ event: "update", question: data.question })
-                );
-            } else {
-                console.error("La respuesta no contiene una pregunta válida:", data);
-            }
-        })
-        .catch(error => {
-            console.error("Error al avanzar a la siguiente pregunta:", error);
-            alert("No se pudo avanzar a la siguiente pregunta. Por favor, inténtalo de nuevo.");
-        });
-}
-
+                    // Enviar la nueva pregunta a través del WebSocket
+                    stompClient.send(
+                        `/topic/${sessionCode}`,
+                        {},
+                        JSON.stringify({ event: "update", question: data.question })
+                    );
+                } else {
+                    console.error("La respuesta no contiene una pregunta válida:", data);
+                }
+            })
+            .catch(error => {
+                console.error("Error al avanzar a la siguiente pregunta:", error);
+                alert("No se pudo avanzar a la siguiente pregunta. Por favor, inténtalo de nuevo.");
+            });
+    }
 
     // Inicialización
     loadInitialData();
