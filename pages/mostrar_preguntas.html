@@ -6,30 +6,34 @@
     <title>Mostrar Preguntas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/styles/mostrar_preguntas.css" rel="stylesheet">
-
 </head>
 <body>
-        <!-- Video de fondo -->
-        <video autoplay loop muted playsinline id="backgroundVideo">
-            <source src="/videos/fondo2.webm" type="video/mp4">
-            Tu navegador no soporta el video HTML5.
-        </video>
+    <!-- Video de fondo -->
+    <video autoplay loop muted playsinline id="backgroundVideo">
+        <source src="/videos/fondo2.webm" type="video/mp4">
+        Tu navegador no soporta el video HTML5.
+    </video>
     <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
-        <h2>Pregunta Actual</h2>
-        <div class="card w-75 mt-4">
+        <h2 class="card-subtitle mt-3 text-muted" id="questionNumber1">Pregunta <span id="questionNumber">-</span></h2>
+        <div class="card w-75 mt-4" id="preguntas">
             <div class="card-body">
                 <h5 class="card-title">De: <span id="fromUser">-</span></h5>
-                <h6 class="card-subtitle mb-2 text-muted">Para: <span id="toUser">-</span></h6>
-                <p class="card-text" id="questionText">La pregunta aparecerá aquí.</p>
+                <h5 class="card-subtitle mb-2 text-muted">Para: <span id="toUser">-</span></h5>
+                <br>
+                <p class="card-text" id="questionText" >La pregunta aparecerá aquí.</p>
+                <br>
             </div>
         </div>
 
-        <button id="nextQuestionButton" class="btn btn-primary mt-4" style="display: none;">Siguiente Pregunta</button>
+        <!-- Contenedor para los botones -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <button id="nextQuestionButton" class="btn btn-primary btn-lg" style="display: none;">Siguiente</button>
+            <button id="logoutButton" class="btn btn-danger btn-lg" style="display: block;">Salir</button>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
     <script type="module" src="../scripts/mostrar_preguntas.js"></script>
-
 </body>
 </html>

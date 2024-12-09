@@ -24,9 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                // Guarda el token de sesión en localStorage y redirige a sesion_menu.html
-                localStorage.setItem("sessionToken", data.sessionToken);
-                localStorage.setItem("username", data.username);
+                sessionStorage.setItem("sessionToken", data.sessionToken);
+                sessionStorage.setItem("username", data.username);                
                 const sessionCode = data.sessionCode;
                 window.location.href = `sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
             })

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
     window.history.replaceState({}, document.title, cleanUrl);
 
-    const sessionToken = localStorage.getItem("sessionToken");
+    const sessionToken = sessionStorage.getItem("sessionToken");
     if (!sessionToken || !username) {
         window.location.href = "/index.html";
         return;
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (parsedMessage.event === "gameStarted") {
                     console.log("Juego iniciado, redirigiendo...");
-                    window.location.href = `preguntas_incomodas.html?sessionCode=${sessionCode}&username=${username}`;
+                    window.location.href = `preguntas_directas.html?sessionCode=${sessionCode}&username=${username}`;
                 }
 
                 if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         username: username
                     }));
 
-                    localStorage.removeItem("sessionToken");
-                    localStorage.removeItem("username");
+                    sessionStorage.removeItem("sessionToken");
+                    sessionStorage.removeItem("username");
                     window.location.href = "/index.html";
                 } else {
                     alert("Error al cerrar sesión.");

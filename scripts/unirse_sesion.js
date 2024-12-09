@@ -40,9 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json(); // Asegúrate de que haya un cuerpo JSON en la respuesta
             })
             .then(data => {
-                // Guardar el token de sesión en localStorage y redirigir
-                localStorage.setItem("sessionToken", data.sessionToken);
-                localStorage.setItem("username", username);
+                sessionStorage.setItem("sessionToken", data.sessionToken);
+                sessionStorage.setItem("username", username);
                 window.location.href = `sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
             })
             .catch(error => {

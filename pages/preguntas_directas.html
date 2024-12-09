@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas</title>
+    <link href="/styles/preguntas_directas.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Video de fondo -->
+    <video autoplay loop muted playsinline id="backgroundVideo">
+        <source src="/videos/fondo2.webm" type="video/mp4">
+        Tu navegador no soporta el video HTML5.
+    </video>
+    
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <h2>Escribe tus preguntas</h2>
+
+        <!-- Contenedor de preguntas dinámicas -->
+        <div id="questionsContainer"></div>
+        
+        <!-- Checkbox para anonimato -->
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="anonymousCheck">
+            <label class="form-check-label" for="anonymousCheck">
+                Enviar como anónimo
+            </label>
+        </div>
+
+        <!-- Botón de envío -->
+        <button id="submitQuestionsButton">Listo</button>
+        
+        <!-- Mensaje de error -->
+        <div id="error"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script type="module" src="../scripts/preguntas_directas.js"></script>
+
+</body>
+</html>
