@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const parsedMessage = JSON.parse(message.body);
 
-                if (parsedMessage.event === "gameStarted") {
-                    console.log("Juego iniciado, redirigiendo...");
-                    window.location.href = `preguntas_directas.html?sessionCode=${sessionCode}&username=${username}`;
+                if (parsedMessage.event === "yoNuncaNuncaStarted") {
+                    console.log("Yo Nunca Nunca iniciado, redirigiendo...");
+                    window.location.href = `yo_nunca_nunca.html?sessionCode=${sessionCode}&username=${username}`;
                 }
 
                 if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
@@ -53,8 +53,27 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("error").textContent = "No se pudo conectar al servidor. Intenta recargar la página.";
     });
 
-    // Botón para iniciar el juego
-    document.getElementById("startGameButton").addEventListener("click", function () {
+    // Mostrar botones solo para el creador de la sesión
+    function setupButtonsForCreator(isCreator) {
+        const buttons = [
+            document.getElementById("startGameButton"),
+            document.getElementById("preguntasIncomodas"),
+            document.getElementById("yoNuncaNunca"),
+            document.getElementById("culturaPendeja")
+        ];
+
+        buttons.forEach(button => {
+            button.style.display = isCreator ? "block" : "none";
+        });
+
+        if (isCreator) {
+            document.getElementById("startGameButton").addEventListener("click", startGame); // Reasigna funcionalidad
+            document.getElementById("yoNuncaNunca").addEventListener("click", startYoNuncaNunca); // Añadido para Yo Nunca Nunca
+        }
+    }
+
+    // Función para iniciar el juego "Preguntas Directas"
+    function startGame() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/start-game`, {
             method: "POST"
         })
@@ -67,7 +86,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => console.error("Error al iniciar el juego:", error));
-    });
+    }
+
+    // Función para iniciar "Yo Nunca Nunca"
+    function startYoNuncaNunca() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/yo-nunca-nunca/start`, {
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Yo Nunca Nunca iniciado. Enviando evento a través del WebSocket.");
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "yoNuncaNuncaStarted" }));
+                } else {
+                    throw new Error("Error al iniciar Yo Nunca Nunca.");
+                }
+            })
+            .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
+    }
 
     // Botón para salir de la sesión
     document.getElementById("logoutButton").addEventListener("click", function () {
@@ -106,11 +141,10 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 console.log("Usuarios iniciales cargados:", data.users);
-                if (data.creator === username) {
-                    document.getElementById("startGameButton").style.display = "block";
-                } else {
-                    document.getElementById("startGameButton").style.display = "none";
-                }
+
+                // Mostrar botones solo si el usuario es el creador
+                setupButtonsForCreator(data.creator === username);
+
                 updateUserList(data.users); // Actualiza la lista de usuarios iniciales
             })
             .catch(error => {
