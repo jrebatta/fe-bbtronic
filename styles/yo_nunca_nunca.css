@@ -59,13 +59,10 @@ body {
         0 0 40px #bb00ff; /* Capa de brillo más intensa */
 }
 
-
-
 /* Ajuste de espaciado */
 #preguntas h5, #preguntas h6, #preguntas p {
     margin-bottom: 20px; /* Espaciado uniforme entre elementos */
 }
-
 
 /* Botón de envío */
 #nextQuestionButton, #logoutButton {

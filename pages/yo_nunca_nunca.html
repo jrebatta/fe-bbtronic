@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mostrar Preguntas</title>
+    <title>Yo Nunca Nunca</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/styles/mostrar_preguntas.css" rel="stylesheet">
+    <link href="/styles/yo_nunca_nunca.css" rel="stylesheet">
 </head>
 <body>
     <!-- Video de fondo -->
@@ -13,27 +13,23 @@
         <source src="/videos/fondo2.webm" type="video/mp4">
         Tu navegador no soporta el video HTML5.
     </video>
-    <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
-        <h2 class="card-subtitle mt-3 text-muted" id="questionNumber1">Pregunta <span id="questionNumber">-</span></h2>
-        <div class="card w-75 mt-4" id="preguntas">
+    <div class="container vh-100 d-flex flex-column justify-content-center align-items-center text-center">
+        <div class="card w-50 mt-4" id="preguntas">
             <div class="card-body">
-                <h5 class="card-title">De: <span id="fromUser">-</span></h5>
-                <h5 class="card-subtitle mb-2 text-muted">Para: <span id="toUser">-</span></h5>
-                <br>
-                <p class="card-text" id="questionText" >La pregunta aparecerá aquí.</p>
-                <br>
+                <h5 class="card-subtitle mb-3 text-muted">Para: <span id="toUser">-</span></h5>
+                <p class="card-text display-5" id="questionText">La pregunta aparecerá aquí.</p>
             </div>
         </div>
 
         <!-- Contenedor para los botones -->
         <div class="d-flex justify-content-center gap-3 mt-4">
             <button id="nextQuestionButton" class="btn btn-primary btn-lg" style="display: none;">Siguiente</button>
-            <button id="logoutButton" class="btn btn-danger btn-lg" style="display: block;">Salir</button>
+            <button id="logoutButton" class="btn btn-danger btn-lg">Salir</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
-    <script type="module" src="../scripts/mostrar_preguntas.js"></script>
+    <script type="module" src="../scripts/yo_nunca_nunca.js"></script>
 </body>
 </html>

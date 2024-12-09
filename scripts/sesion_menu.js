@@ -1,3 +1,5 @@
+import API_BASE_URL from './ambiente.js';
+
 document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionCode = urlParams.get('sessionCode');
@@ -7,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
     window.history.replaceState({}, document.title, cleanUrl);
 
-    const sessionToken = localStorage.getItem("sessionToken");
+    const sessionToken = sessionStorage.getItem("sessionToken");
     if (!sessionToken || !username) {
         window.location.href = "/index.html";
         return;
@@ -16,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("sessionCode").textContent = sessionCode;
 
     // Conexión al WebSocket
-    const socket = new SockJS('https://be-bbtronic.onrender.com/websocket');
+    const socket = new SockJS(`${API_BASE_URL}/websocket`);
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function () {
@@ -27,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const parsedMessage = JSON.parse(message.body);
 
-                if (parsedMessage.event === "gameStarted") {
-                    console.log("Juego iniciado, redirigiendo...");
-                    window.location.href = `preguntas_incomodas.html?sessionCode=${sessionCode}&username=${username}`;
+                if (parsedMessage.event === "yoNuncaNuncaStarted") {
+                    console.log("Yo Nunca Nunca iniciado, redirigiendo...");
+                    window.location.href = `yo_nunca_nunca.html?sessionCode=${sessionCode}&username=${username}`;
                 }
 
                 if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
@@ -51,9 +53,28 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("error").textContent = "No se pudo conectar al servidor. Intenta recargar la página.";
     });
 
-    // Botón para iniciar el juego
-    document.getElementById("startGameButton").addEventListener("click", function () {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}/start-game`, {
+    // Mostrar botones solo para el creador de la sesión
+    function setupButtonsForCreator(isCreator) {
+        const buttons = [
+            document.getElementById("startGameButton"),
+            document.getElementById("preguntasIncomodas"),
+            document.getElementById("yoNuncaNunca"),
+            document.getElementById("culturaPendeja")
+        ];
+
+        buttons.forEach(button => {
+            button.style.display = isCreator ? "block" : "none";
+        });
+
+        if (isCreator) {
+            document.getElementById("startGameButton").addEventListener("click", startGame); // Reasigna funcionalidad
+            document.getElementById("yoNuncaNunca").addEventListener("click", startYoNuncaNunca); // Añadido para Yo Nunca Nunca
+        }
+    }
+
+    // Función para iniciar el juego "Preguntas Directas"
+    function startGame() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/start-game`, {
             method: "POST"
         })
             .then(response => {
@@ -65,11 +86,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => console.error("Error al iniciar el juego:", error));
-    });
+    }
+
+    // Función para iniciar "Yo Nunca Nunca"
+    function startYoNuncaNunca() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/yo-nunca-nunca/start`, {
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Yo Nunca Nunca iniciado. Enviando evento a través del WebSocket.");
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "yoNuncaNuncaStarted" }));
+                } else {
+                    throw new Error("Error al iniciar Yo Nunca Nunca.");
+                }
+            })
+            .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
+    }
 
     // Botón para salir de la sesión
     document.getElementById("logoutButton").addEventListener("click", function () {
-        fetch(`https://be-bbtronic.onrender.com/api/users/logout?sessionToken=${sessionToken}`, {
+        fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
             method: "DELETE"
         })
             .then(response => response.text())
@@ -83,8 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         username: username
                     }));
 
-                    localStorage.removeItem("sessionToken");
-                    localStorage.removeItem("username");
+                    sessionStorage.removeItem("sessionToken");
+                    sessionStorage.removeItem("username");
                     window.location.href = "/index.html";
                 } else {
                     alert("Error al cerrar sesión.");
@@ -95,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Cargar usuarios al inicializar
     function loadInitialUsers() {
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/${sessionCode}`)
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al cargar los datos de la sesión.");
@@ -104,11 +141,10 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 console.log("Usuarios iniciales cargados:", data.users);
-                if (data.creator === username) {
-                    document.getElementById("startGameButton").style.display = "block";
-                } else {
-                    document.getElementById("startGameButton").style.display = "none";
-                }
+
+                // Mostrar botones solo si el usuario es el creador
+                setupButtonsForCreator(data.creator === username);
+
                 updateUserList(data.users); // Actualiza la lista de usuarios iniciales
             })
             .catch(error => {

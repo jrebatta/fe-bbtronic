@@ -12,26 +12,29 @@
         <source src="/videos/fondo2.webm" type="video/mp4">
         Tu navegador no soporta el video HTML5.
     </video>
-    <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
-        <h1 class="mb-4">Sesión de Juego</h1>
-        <p><strong>Código de Sesión:</strong> <span id="sessionCode"></span></p>
-        
-        <h2 class="mt-4">Usuarios en la Sesión</h2>
-        <ul id="userList" class="list-group mt-2"></ul>
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- Sección izquierda: lista de usuarios -->
+            <div class="left-section">
+                <h2>Usuarios en la Sesión</h2>
+                <ul id="userList" class="list-group"></ul>
+            </div>
 
-        <!-- Botón para iniciar Preguntas -->
-        <button id="startGameButton" class="btn btn-primary mt-4" style="display: none;">Preguntas</button>
-
-        <!-- Botón de salida de sesión -->
-        <button id="logoutButton" class="btn btn-danger mt-4">Salir de la Sesión</button>
-
-        <!-- Elemento para mensajes de error -->
-        <div id="error" class="text-danger mt-3"></div>
+            <!-- Sección derecha: botones -->
+            <div class="right-section">
+                <h1>Código de Sesión: <span id="sessionCode"></span></h1>
+                <button id="startGameButton" class="btn btn-primary" style="display: none;">Preguntas Directas</button>
+                <button id="preguntasIncomodas" class="btn btn-primary" style="display: none;">Preguntas Incomodas</button>
+                <button id="yoNuncaNunca" class="btn btn-primary" style="display: none;">Yo nunca nunca</button>
+                <button id="culturaPendeja" class="btn btn-primary" style="display: none;">Cultura Pendeja</button>
+                <button id="logoutButton" class="btn btn-danger">Salir de la Sesión</button>
+                <div id="error" class="text-danger"></div>
+            </div>
+        </div>
     </div>
 
-    <script defer src="../scripts/sesion_menu.js"></script>
+    <script type="module" src="../scripts/sesion_menu.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
-    <script defer src="../scripts/preguntas_incomodas.js"></script>
 </body>
 </html>

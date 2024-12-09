@@ -1,3 +1,5 @@
+import API_BASE_URL from './ambiente.js';
+
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById("joinSessionForm");
     const submitButton = document.querySelector("#joinSessionForm button[type='submit']");
@@ -7,12 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
     window.history.replaceState({}, document.title, cleanUrl);
 
-    
     function validateInputLength(input) {
-            // Limitar la entrada a 4 caracteres
-            if (input.value.length > 4) {
-                input.value = input.value.slice(0, 4); // Truncar a los primeros 4 dígitos
-            }
+        // Limitar la entrada a 4 caracteres
+        if (input.value.length > 4) {
+            input.value = input.value.slice(0, 4); // Truncar a los primeros 4 dígitos
+        }
     }
 
     form.addEventListener("submit", function (event) {
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Deshabilitar el botón al inicio
         submitButton.disabled = true;
 
-        fetch(`https://be-bbtronic.onrender.com/api/game-sessions/join`, {
+        fetch(`${API_BASE_URL}/api/game-sessions/join`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -39,9 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json(); // Asegúrate de que haya un cuerpo JSON en la respuesta
             })
             .then(data => {
-                // Guardar el token de sesión en localStorage y redirigir
-                localStorage.setItem("sessionToken", data.sessionToken);
-                localStorage.setItem("username", username);
+                sessionStorage.setItem("sessionToken", data.sessionToken);
+                sessionStorage.setItem("username", username);
                 window.location.href = `sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
             })
             .catch(error => {
@@ -52,5 +52,4 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Error:", error.message);
             });
     });
-
 });
