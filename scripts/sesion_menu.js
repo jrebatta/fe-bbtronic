@@ -29,10 +29,22 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const parsedMessage = JSON.parse(message.body);
 
+                // Manejar el evento de inicio del juego general
+                if (parsedMessage.event === "gameStarted") {
+                console.log("Juego iniciado, redirigiendo...");
+                window.location.href = `preguntas_directas.html?sessionCode=${sessionCode}&username=${username}`;
+        }
+
                 if (parsedMessage.event === "yoNuncaNuncaStarted") {
                     console.log("Yo Nunca Nunca iniciado, redirigiendo...");
                     window.location.href = `yo_nunca_nunca.html?sessionCode=${sessionCode}&username=${username}`;
                 }
+
+                if (parsedMessage.event === "quienEsMasProbableStarted") {
+                    console.log("Quien Es Más Probable iniciado, redirigiendo...");
+                    window.location.href = `quien_es_mas_probable.html?sessionCode=${sessionCode}&username=${username}`;
+                }
+                
 
                 if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
                     console.log("Lista de usuarios actualizada:", parsedMessage.users);
@@ -59,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("startGameButton"),
             document.getElementById("preguntasIncomodas"),
             document.getElementById("yoNuncaNunca"),
+            document.getElementById("quienEsMasProbable"),
             document.getElementById("culturaPendeja")
         ];
 
@@ -69,8 +82,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isCreator) {
             document.getElementById("startGameButton").addEventListener("click", startGame); // Reasigna funcionalidad
             document.getElementById("yoNuncaNunca").addEventListener("click", startYoNuncaNunca); // Añadido para Yo Nunca Nunca
+            document.getElementById("quienEsMasProbable").addEventListener("click", startQuienEsMasProbable);
         }
     }
+
 
     // Función para iniciar el juego "Preguntas Directas"
     function startGame() {
@@ -86,6 +101,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => console.error("Error al iniciar el juego:", error));
+    }
+    
+
+    function startYoNuncaNunca() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/yo-nunca-nunca/start`, {
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Yo Nunca Nunca iniciado. Enviando evento a través del WebSocket.");
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "yoNuncaNuncaStarted" }));
+                } else {
+                    throw new Error("Error al iniciar Yo Nunca Nunca.");
+                }
+            })
+            .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
     }
 
     // Función para iniciar "Yo Nunca Nunca"
@@ -103,6 +134,22 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
     }
+
+    function startQuienEsMasProbable() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/quien-es-mas-probable/start`, {
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Quien Es Más Probable iniciado. Enviando evento a través del WebSocket.");
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "quienEsMasProbableStarted" }));
+                } else {
+                    throw new Error("Error al iniciar Quien Es Más Probable.");
+                }
+            })
+            .catch(error => console.error("Error al iniciar Quien Es Más Probable:", error));
+    }
+    
 
     // Botón para salir de la sesión
     document.getElementById("logoutButton").addEventListener("click", function () {

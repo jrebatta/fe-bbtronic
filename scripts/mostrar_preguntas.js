@@ -137,35 +137,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Botón para salir de la sesión
     document.getElementById("logoutButton").addEventListener("click", function () {
+        const sessionToken = sessionStorage.getItem("sessionToken");
+    
         if (!sessionToken) {
-            console.error("No se encontró sessionToken. Redirigiendo a inicio.");
             window.location.href = "/index.html";
             return;
         }
     
+        // Realizar la llamada al endpoint de logout
         fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
             method: "DELETE"
         })
             .then(response => response.text())
             .then(message => {
+                console.log(message); // Mostrar el mensaje recibido del backend
                 if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
-                    console.log("Sesión cerrada correctamente.");
-    
                     // Notificar al servidor que el usuario salió
                     stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
                         event: "userLeft",
-                        username: username
+                        username
                     }));
     
+                    // Limpiar datos del almacenamiento de sesión
                     sessionStorage.removeItem("sessionToken");
                     sessionStorage.removeItem("username");
+    
+                    // Redirigir al usuario a la página principal
                     window.location.href = "/index.html";
                 } else {
-                    alert("Error al cerrar sesión.");
+                    alert("Error inesperado al cerrar sesión.");
                 }
             })
             .catch(error => console.error("Error cerrando sesión:", error));
     });
+    
     
 
     // Inicialización

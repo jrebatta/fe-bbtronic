@@ -31,38 +31,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Botón para salir de la sesión
     document.getElementById("logoutButton").addEventListener("click", function () {
-        sessionStorage.removeItem("sessionToken");
-        sessionStorage.removeItem("username");
-        window.location.href = "/index.html";
+        const sessionToken = sessionStorage.getItem("sessionToken");
+    
+        if (!sessionToken) {
+            window.location.href = "/index.html";
+            return;
+        }
+    
+        // Realizar la llamada al endpoint de logout
+        fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
+            method: "DELETE"
+        })
+            .then(response => response.text())
+            .then(message => {
+                console.log(message); // Mostrar el mensaje recibido del backend
+                if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
+                    // Notificar al servidor que el usuario salió
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+                        event: "userLeft",
+                        username
+                    }));
+    
+                    // Limpiar datos del almacenamiento de sesión
+                    sessionStorage.removeItem("sessionToken");
+                    sessionStorage.removeItem("username");
+    
+                    // Redirigir al usuario a la página principal
+                    window.location.href = "/index.html";
+                } else {
+                    alert("Error inesperado al cerrar sesión.");
+                }
+            })
+            .catch(error => console.error("Error cerrando sesión:", error));
     });
+    
 
     // Botón para obtener la siguiente pregunta (Solo visible para el creador)
     document.getElementById("nextQuestionButton").addEventListener("click", fetchNextQuestion);
 
-    // Actualizar la UI con la pregunta y usuario asignado
-    function updateUI(question, user) {
-        document.getElementById("questionText").textContent = question.texto;
-        document.getElementById("toUser").textContent = user.username;
-    }
+    // Actualizar la UI con la pregunta
+function updateUI(question) {
+    document.getElementById("questionText").textContent = question.texto;
+}
+
 
     // Llamar al endpoint para obtener una pregunta (Solo el creador puede llamar este método)
-    function fetchNextQuestion() {
-        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-yo-nunca-nunca`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al obtener la siguiente pregunta");
-                }
-                return response.json();
-            })
-            .then(data => {
-                const { question, user } = data; // Desestructurar la pregunta y el usuario
-                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
-                    event: "newYoNuncaNuncaQuestion",
-                    data: { question, user }
-                }));
-            })
-            .catch(error => console.error("Error al obtener la siguiente pregunta:", error));
-    }
+function fetchNextQuestion() {
+    fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-yo-nunca-nunca?tipo=all`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al obtener la siguiente pregunta");
+            }
+            return response.json();
+        })
+        .then(data => {
+            const question = data; // Ahora solo trabajamos con la pregunta
+            stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+                event: "newYoNuncaNuncaQuestion",
+                data: { question } // Solo enviamos la pregunta
+            }));
+        })
+        .catch(error => console.error("Error al obtener la siguiente pregunta:", error));
+}
+
 
     // Verificar si el usuario es el creador de la sesión
     function fetchSessionDetails() {
