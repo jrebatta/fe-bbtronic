@@ -48,10 +48,8 @@ body {
     0 0 70px #bb00ff; /* Capa de brillo más intensa */
 }
 
-
-
-/* Botones */
-#nextQuestionButton, #logoutButton, #showResultsButton {
+/* Botones comunes */
+#nextQuestionButton, #logoutButton, #showResultsButton, .btn-general {
     font-size: 15px; /* Tamaño de texto más grande */
     color: #FFFFFF;
     background: #000000;
@@ -67,7 +65,8 @@ body {
     margin-top: 30px; /* Más espacio respecto al formulario */
 }
 
-#nextQuestionButton:hover, #logoutButton:hover, #showResultsButton:hover {
+/* Efecto hover para botones */
+#nextQuestionButton:hover, #logoutButton:hover, #showResultsButton:hover, .btn-general:hover {
     background: #bb00ff; /* Cambiar fondo al morado */
     color: #FFFFFF !important;
     border-color: #bb00ff; /* Cambiar borde al morado */
@@ -75,14 +74,11 @@ body {
     text-shadow: 0 0 5px #FFFFFF, 0 0 20px #FFFFFF;
 }
 
-#questionNumber1 {
-    font-size: 2.2rem; /* Tamaño del texto del título */
-    font-weight: bold;
-    color: #FFFFFF !important; /* Color blanco */
-    text-align: center; /* Centrar texto */
-    margin-bottom: 20px; /* Espaciado inferior */
+/* Contenedor de botones de usuario */
+#userButtons .btn-general {
+    margin: 10px; /* Espaciado entre botones */
+    display: inline-block; /* Mantener alineación flexible */
 }
-
 
 /* Ajustes responsivos */
 @media (max-width: 768px) {
@@ -98,6 +94,7 @@ body {
 
     #questionNumber {
         font-size: 2rem; /* Reducir el tamaño del título */
+        color: #FFFFFF !important;
     }
 
     .btn-lg {
@@ -132,10 +129,78 @@ body {
         font-size: 1.2rem; /* Reducir tamaño del texto de las secciones */
     }
 
-    #showResultsButton, #nextQuestionButton, #logoutButton, #userButtons {
+    #showResultsButton, #nextQuestionButton, #logoutButton, .btn-general {
         font-size: 1rem; /* Tamaño del texto más pequeño */
         padding: 10px 20px; /* Reducir el padding */
         max-width: 150px; /* Reducir el ancho máximo */
         border-radius: 8px; /* Bordes ligeramente redondeados */
     }
 }
+
+#questionNumber1 {
+    font-size: 2.2rem; /* Tamaño del texto del título */
+    font-weight: bold;
+    color: #FFFFFF !important; /* Color blanco */
+    text-align: center; /* Centrar texto */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+#userButtons .btn-general:disabled {
+    background: #555555 !important; /* Fondo gris para indicar deshabilitado */
+    color: #aaaaaa !important; /* Texto más claro */
+    border-color: #555555 !important; /* Borde igual al fondo */
+    cursor: not-allowed; /* Cambia el cursor */
+    transform: none; /* Sin efecto hover */
+    text-shadow: none; /* Sin sombra de texto */
+}
+
+#userButtons .btn-general.disabled {
+    opacity: 0.6; /* Reduce la opacidad */
+    pointer-events: none; /* Desactiva interacciones */
+}
+
+
+
+
+/* Contenedor del mensaje del ganador */
+#resultsSection {
+    border-radius: 15px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    display: none; /* Ocultar por defecto */
+    text-align: center; /* Centrar texto */
+}
+
+/* Contenedor del mensaje del ganador */
+#resultsSection {
+    background: none; /* Sin fondo */
+    padding: 20px; /* Espaciado interno */
+    text-align: center; /* Centrar texto */
+    display: none; /* Ocultar por defecto */
+}
+
+/* Texto del ganador */
+#resultsSection #winnerName {
+    font-size: 2.5rem; /* Tamaño grande */
+    font-weight: bold; /* Texto en negrita */
+    color: #ffffff !important; /* Texto celeste */
+    text-shadow: 
+    0 0 15px #bb00ff, /* Capa de brillo cercana */
+    0 0 30px #bb00ff, /* Capa de brillo intermedia */
+    0 0 50px #bb00ff, /* Capa de brillo extendida */
+    0 0 70px #bb00ff; /* Capa de brillo más intensa */
+    margin: 20px 0; /* Espaciado superior e inferior */
+    animation: winnerFadeIn 1s ease-in-out; /* Animación al mostrar */
+}
+
+/* Animación para el texto del ganador */
+@keyframes winnerFadeIn {
+    from {
+        opacity: 0; /* Comienza invisible */
+        transform: scale(0.8); /* Comienza más pequeño */
+    }
+    to {
+        opacity: 1; /* Totalmente visible */
+        transform: scale(1); /* Tamaño original */
+    }
+}
+

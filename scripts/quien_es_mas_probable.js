@@ -97,27 +97,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function generateVotingButtons(users) {
-        userButtons.innerHTML = "";
+        userButtons.innerHTML = ""; // Limpia los botones existentes
         users.forEach(user => {
             const button = document.createElement("button");
-            button.classList.add("btn", "btn-outline-primary");
-            button.textContent = user.username;
-            button.disabled = false;
-            button.onclick = () => sendVote(user.username);
-            userButtons.appendChild(button);
+            button.classList.add("btn-general"); // Clase compartida para el estilo
+            button.textContent = user.username; // Texto del botón
+            button.disabled = false; // Habilitar botón
+            button.onclick = () => sendVote(user.username); // Acción al hacer clic
+            userButtons.appendChild(button); // Agregar botón al contenedor
         });
-    }
-
+    } 
+      
     function sendVote(votedUser) {
         const votingUser = username;
-
+    
         if (!votingUser) {
             console.error("No se pudo obtener el usuario que está votando.");
             return;
         }
-
+    
         const voteData = { votingUser, votedUser };
-
+    
+        // Realiza la solicitud para enviar el voto
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/vote`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -125,7 +126,11 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (response.ok) {
-                    document.querySelectorAll("#userButtons button").forEach(button => button.disabled = true);
+                    // Deshabilitar todos los botones dentro de #userButtons
+                    document.querySelectorAll("#userButtons .btn-general").forEach(button => {
+                        button.disabled = true; // Deshabilita el botón
+                        button.classList.add("disabled"); // Opcional: agrega una clase para efectos visuales
+                    });
                 } else {
                     return response.json().then(error => {
                         throw new Error(error.error || "Error al registrar el voto.");
@@ -134,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => console.error("Error al enviar el voto:", error));
     }
+    
 
     function fetchVoteResults() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/vote-results`)
