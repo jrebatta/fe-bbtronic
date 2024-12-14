@@ -120,5 +120,31 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error("Error al verificar si todos están listos:", error));
     }
 
+    document.getElementById("logoutButton").addEventListener("click", function () {
+        const sessionToken = sessionStorage.getItem("sessionToken");
+
+        if (!sessionToken) {
+            window.location.href = "/index.html";
+            return;
+        }
+
+        fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
+            method: "DELETE"
+        })
+            .then(response => response.text())
+            .then(message => {
+                console.log(message);
+                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+                    event: "userLeft",
+                    username
+                }));
+
+                sessionStorage.removeItem("sessionToken");
+                sessionStorage.removeItem("username");
+                window.location.href = "/index.html";
+            })
+            .catch(error => console.error("Error cerrando sesión:", error));
+    });
+
     loadUsers();
 });

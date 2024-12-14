@@ -44,8 +44,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log("Quien Es Más Probable iniciado, redirigiendo...");
                     window.location.href = `quien_es_mas_probable.html?sessionCode=${sessionCode}&username=${username}`;
                 }
-                
 
+                if (parsedMessage.event === "culturaPendejaStarted") {
+                    console.log("Cultura Pendeja iniciado, redirigiendo...");
+                    window.location.href = `cultura_pendeja.html?sessionCode=${sessionCode}&username=${username}`;
+                }
+                
                 if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
                     console.log("Lista de usuarios actualizada:", parsedMessage.users);
                     updateUserList(parsedMessage.users); // Actualiza usuarios al recibir el evento
@@ -83,6 +87,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("startGameButton").addEventListener("click", startGame); // Reasigna funcionalidad
             document.getElementById("yoNuncaNunca").addEventListener("click", startYoNuncaNunca); // Añadido para Yo Nunca Nunca
             document.getElementById("quienEsMasProbable").addEventListener("click", startQuienEsMasProbable);
+            document.getElementById("culturaPendeja").addEventListener("click", startCulturaPendeja); // Añadido para Yo Nunca Nunca
+
         }
     }
 
@@ -119,22 +125,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
     }
 
-    // Función para iniciar "Yo Nunca Nunca"
-    function startYoNuncaNunca() {
-        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/yo-nunca-nunca/start`, {
-            method: "POST"
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log("Yo Nunca Nunca iniciado. Enviando evento a través del WebSocket.");
-                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "yoNuncaNuncaStarted" }));
-                } else {
-                    throw new Error("Error al iniciar Yo Nunca Nunca.");
-                }
-            })
-            .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
-    }
-
     function startQuienEsMasProbable() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/quien-es-mas-probable/start`, {
             method: "POST"
@@ -149,6 +139,22 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => console.error("Error al iniciar Quien Es Más Probable:", error));
     }
+
+        // Función para iniciar "Cultura Pendeja"
+        function startCulturaPendeja() {
+            fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/cultura-pendeja/start`, {
+                method: "POST"
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Cultura Pendeja iniciada. Enviando evento a través del WebSocket.");
+                        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "culturaPendejaStarted" }));
+                    } else {
+                        throw new Error("Error al iniciar Yo Nunca Nunca.");
+                    }
+                })
+                .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
+        }
     
 
     // Botón para salir de la sesión
