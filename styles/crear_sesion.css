@@ -8,7 +8,7 @@ body {
     height: 100vh;
     color: #FFFFFF;
     overflow: hidden;
-    background-color: #121212; /* Fondo oscuro como respaldo */
+    background-color: #121212;
 }
 
 /* Video de fondo */
@@ -18,20 +18,20 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Asegura que el video cubra toda la pantalla */
-    z-index: -1; /* Ubicar el video detrás del contenido */
+    object-fit: cover;
+    z-index: -1;
 }
 
 /* Contenedor principal */
 .container {
-    z-index: 1; /* Asegura que el contenido esté sobre el video */
+    z-index: 1;
     text-align: center;
     display: flex;
-    flex-direction: column; /* Alinear elementos en columna */
+    flex-direction: column;
     justify-content: center;
-    align-items: center; /* Centrar elementos horizontalmente */
-    height: 100%; /* Asegura que el contenedor ocupe toda la altura */
-    gap: 20px; /* Espacio uniforme entre elementos */
+    align-items: center;
+    height: 100%;
+    gap: 20px;
 }
 
 /* Título principal */
@@ -39,7 +39,7 @@ h1 {
     font-size: 36px;
     font-weight: bold;
     color: #FFFFFF;
-    margin: 0; /* Sin márgenes extras */
+    margin: 0;
     text-transform: uppercase;
     text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
 }
@@ -47,68 +47,60 @@ h1 {
 /* Input del formulario */
 form {
     width: 100%;
-    max-width: 400px; /* Ancho máximo para formularios */
+    max-width: 400px;
 }
 
 form .form-control {
     background: #000000;
-    color: #FFFFFF; /* Texto del input blanco */
+    color: #FFFFFF;
     border: 2px solid #FFFFFF;
     border-radius: 5px;
     padding: 10px;
     font-size: 16px;
+    text-align: center;
     transition: border-color 0.3s ease;
-    width: 70%; /* Input ocupa todo el ancho disponible */
-    text-align: center; /* Centrar texto dentro del input */
-}
-
-/* Placeholder desaparece al hacer foco */
-form .form-control:focus::placeholder {
-    color: transparent; /* Hacer el placeholder invisible */
-}
-
-form .form-control::placeholder {
-    color: #FFFFFF; /* Texto del placeholder también blanco */
 }
 
 form .form-control:focus {
-    background: #000000;
-    color: #FFFFFF; /* Mantener el texto blanco al enfocar */
-    box-shadow: 0 0 5px #ffffff;
     outline: none;
+    box-shadow: 0 0 5px #FFFFFF;
+}
+
+form .form-control::placeholder {
+    color: #FFFFFF;
+}
+
+form .form-control:focus::placeholder {
+    color: transparent;
 }
 
 /* Botón de envío */
 form button[type="submit"] {
-    font-size: 15px; /* Tamaño de texto más pequeño */
+    font-size: 15px;
     color: #FFFFFF;
     background: #000000;
     border: 2px solid #FFFFFF;
-    border-radius: 10px; /* Bordes redondeados */
-    padding: 10px 20px; /* Tamaño reducido del botón */
+    border-radius: 10px;
+    padding: 10px 20px;
     text-transform: uppercase;
     transition: all 0.3s ease;
     cursor: pointer;
-    display: block;
-    margin: 0 auto; /* Centrar el botón horizontalmente */
-    max-width: 160px; /* Limitar el ancho máximo del botón */
-    margin-top: 20px; /* Espacio respecto al formulario */
+    max-width: 160px;
+    margin: 20px auto 0;
 }
 
 form button[type="submit"]:hover {
-    background: #bb00ff; /* Cambiar fondo al azul */
-    color: #FFFFFF;
-    border-color: #bb00ff; /* Cambiar borde al azul */
+    background: #bb00ff;
+    border-color: #bb00ff;
     transform: scale(1.05);
     text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
 }
 
 /* Mensajes de error */
 #error {
-    margin-top: 20px; /* Espacio respecto al formulario */
     font-size: 20px;
     color: #ff4d4d;
-    text-align: center; /* Centrar mensajes de error */
+    text-align: center;
 }
 
 /* Información de sesión */
@@ -116,20 +108,18 @@ form button[type="submit"]:hover {
     background-color: rgba(0, 0, 0, 0.8);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    text-align: center; /* Centrar texto dentro del contenedor */
-    margin-top: 20px; /* Espacio respecto al formulario */
+    text-align: center;
+    margin-top: 20px;
 }
 
 #sessionInfo h3 {
     font-size: 24px;
     font-weight: bold;
-    margin: 0 0 10px 0; /* Espacio inferior únicamente */
     color: #FFFFFF;
 }
 
 #sessionInfo p {
     font-size: 16px;
     color: #FFFFFF;
-    margin: 5px 0; /* Márgenes uniformes arriba y abajo */
+    margin: 5px 0;
 }

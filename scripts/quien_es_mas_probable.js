@@ -1,163 +1,101 @@
 import API_BASE_URL from './ambiente.js';
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionCode = urlParams.get('sessionCode');
     const username = urlParams.get('username');
 
+    // Elementos principales
     const votingSection = document.getElementById("votingSection");
     const userButtons = document.getElementById("userButtons");
     const resultsSection = document.getElementById("resultsSection");
     const winnerName = document.getElementById("winnerName");
     const showResultsButton = document.getElementById("showResultsButton");
     const nextQuestionButton = document.getElementById("nextQuestionButton");
+    const questionText = document.getElementById("questionText");
 
-    // Conexión al WebSocket
+    // Configuración del WebSocket
     const socket = new SockJS(`${API_BASE_URL}/websocket`);
     const stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function () {
-        console.log("WebSocket conectado.");
-
-        // Suscribirse al canal para recibir preguntas y resultados
-        stompClient.subscribe(`/topic/${sessionCode}`, function (message) {
-            try {
-                const parsedMessage = JSON.parse(message.body);
-
-                if (parsedMessage.event === "newQuienEsMasProbableQuestion") {
-                    const question = parsedMessage.data;
-                    updateUI(question);
-                }
-
-                if (parsedMessage.event === "votingResults") {
-                    const winner = parsedMessage.winner;
-                    displayResults(winner); // Mostrar el ganador a todos los usuarios
-                }
-            } catch (error) {
-                console.error("Error al procesar el mensaje del WebSocket:", error);
+    stompClient.connect({}, () => {
+        stompClient.subscribe(`/topic/${sessionCode}`, (message) => {
+            const parsedMessage = JSON.parse(message.body);
+            if (parsedMessage.event === "newQuienEsMasProbableQuestion") {
+                updateUI(parsedMessage.data);
+            } else if (parsedMessage.event === "votingResults") {
+                displayResults(parsedMessage.winner);
             }
         });
 
         fetchSessionDetails();
     });
 
-    document.getElementById("logoutButton").addEventListener("click", function () {
-        const sessionToken = sessionStorage.getItem("sessionToken");
-
-        if (!sessionToken) {
-            window.location.href = "/index.html";
-            return;
-        }
-
-        fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
-            method: "DELETE"
-        })
-            .then(response => response.text())
-            .then(message => {
-                console.log(message);
-                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
-                    event: "userLeft",
-                    username
-                }));
-
-                sessionStorage.removeItem("sessionToken");
-                sessionStorage.removeItem("username");
-                window.location.href = "/index.html";
-            })
-            .catch(error => console.error("Error cerrando sesión:", error));
-    });
-
-    nextQuestionButton.addEventListener("click", fetchNextQuestion);
-
-    showResultsButton.addEventListener("click", function () {
-        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/check-all-voted`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("No se pudo verificar si todos han votado.");
-                }
-                return response.json();
-            })
+    // Funciones principales
+    function fetchSessionDetails() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
+            .then(response => response.json())
             .then(data => {
-                if (data.allVoted) {
-                    fetchVoteResults();
-                } else {
-                    alert("Aún no todos los usuarios han votado.");
-                }
+                const isCreator = data.creator === username;
+                toggleCreatorControls(isCreator);
+                sessionStorage.setItem("users", JSON.stringify(data.users));
+                if (isCreator) fetchNextQuestion();
+                generateVotingButtons(data.users);
             })
-            .catch(error => console.error("Error al verificar los votos:", error));
-    });
+            .catch(console.error);
+    }
+
+    function toggleCreatorControls(isCreator) {
+        nextQuestionButton.style.display = isCreator ? "block" : "none";
+        showResultsButton.style.display = isCreator ? "block" : "none";
+    }
 
     function updateUI(question) {
-        document.getElementById("questionText").textContent = question;
+        questionText.textContent = question;
         resultsSection.style.display = "none";
         votingSection.style.display = "block";
-
         generateVotingButtons(JSON.parse(sessionStorage.getItem("users")) || []);
         showResultsButton.disabled = false;
     }
 
     function generateVotingButtons(users) {
-        userButtons.innerHTML = ""; // Limpia los botones existentes
+        userButtons.innerHTML = "";
         users.forEach(user => {
             const button = document.createElement("button");
-            button.classList.add("btn-general"); // Clase compartida para el estilo
-            button.textContent = user.username; // Texto del botón
-            button.disabled = false; // Habilitar botón
-            button.onclick = () => sendVote(user.username); // Acción al hacer clic
-            userButtons.appendChild(button); // Agregar botón al contenedor
+            button.classList.add("btn-general");
+            button.textContent = user.username;
+            button.onclick = () => sendVote(user.username);
+            userButtons.appendChild(button);
         });
-    } 
-      
+    }
+
     function sendVote(votedUser) {
-        const votingUser = username;
-    
-        if (!votingUser) {
-            console.error("No se pudo obtener el usuario que está votando.");
-            return;
-        }
-    
-        const voteData = { votingUser, votedUser };
-    
-        // Realiza la solicitud para enviar el voto
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/vote`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(voteData)
-        })
-            .then(response => {
-                if (response.ok) {
-                    // Deshabilitar todos los botones dentro de #userButtons
-                    document.querySelectorAll("#userButtons .btn-general").forEach(button => {
-                        button.disabled = true; // Deshabilita el botón
-                        button.classList.add("disabled"); // Opcional: agrega una clase para efectos visuales
-                    });
-                } else {
-                    return response.json().then(error => {
-                        throw new Error(error.error || "Error al registrar el voto.");
-                    });
-                }
-            })
-            .catch(error => console.error("Error al enviar el voto:", error));
+            body: JSON.stringify({ votingUser: username, votedUser })
+        }).then(() => {
+            document.querySelectorAll("#userButtons .btn-general").forEach(button => {
+                button.disabled = true;
+                button.classList.add("disabled");
+            });
+        }).catch(console.error);
     }
-    
 
     function fetchVoteResults() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/vote-results`)
             .then(response => response.json())
             .then(data => {
-                const winner = data.winner;
-
-                // Enviar el ganador al WebSocket para que todos los usuarios lo vean
                 stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
                     event: "votingResults",
-                    winner: winner
+                    winner: data.winner
                 }));
             })
-            .catch(error => console.error("Error al obtener los resultados de la votación:", error));
+            .catch(console.error);
     }
 
     function displayResults(winner) {
-        winnerName.textContent = `${winner}`;
+        winnerName.textContent = winner || "Empate";
         resultsSection.style.display = "block";
         showResultsButton.disabled = true;
     }
@@ -169,25 +107,35 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
                     event: "newQuienEsMasProbableQuestion",
-                    data: data
+                    data
                 }));
             })
-            .catch(error => console.error("Error al obtener la siguiente pregunta:", error));
+            .catch(console.error);
     }
 
-    function fetchSessionDetails() {
-        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
+    // Eventos de botones
+    nextQuestionButton.addEventListener("click", fetchNextQuestion);
+    showResultsButton.addEventListener("click", () => {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/check-all-voted`)
             .then(response => response.json())
             .then(data => {
-                const isCreator = data.creator === username;
-                nextQuestionButton.style.display = isCreator ? "block" : "none";
-                showResultsButton.style.display = isCreator ? "block" : "none";
-
-                sessionStorage.setItem("users", JSON.stringify(data.users));
-                if (isCreator) fetchNextQuestion();
-
-                generateVotingButtons(data.users);
+                if (data.allVoted) fetchVoteResults();
+                else alert("Aún no todos los usuarios han votado.");
             })
-            .catch(error => console.error("Error al obtener detalles de la sesión:", error));
-    }
+            .catch(console.error);
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", () => {
+        const sessionToken = sessionStorage.getItem("sessionToken");
+        fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, { method: "DELETE" })
+            .then(() => {
+                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+                    event: "userLeft",
+                    username
+                }));
+                sessionStorage.clear();
+                window.location.href = "/index.html";
+            })
+            .catch(console.error);
+    });
 });

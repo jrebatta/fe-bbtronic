@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quien Es Más Probable</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/styles/quien_es_mas_probable.css" rel="stylesheet">
+    <title>Quién Es Más Probable</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/quien_es_mas_probable.css">
 </head>
 <body>
-    <video autoplay loop muted playsinline id="backgroundVideo">
+    <!-- Video de fondo -->
+    <video id="backgroundVideo" autoplay loop muted playsinline>
         <source src="/videos/fondo2.webm" type="video/mp4">
         Tu navegador no soporta el video HTML5.
     </video>
+
+    <!-- Contenedor principal -->
     <div class="container-fluid vh-100 d-flex flex-column justify-content-center align-items-center text-center p-3">
         <h2 class="card-subtitle mt-3 text-muted" id="questionNumber1">
-            <span id="questionNumber">Quien es más probable...</span>
+            <span id="questionNumber">Quién es más probable...</span>
         </h2>
         <div class="card mt-4 w-100" id="preguntas">
             <div class="card-body">
@@ -22,22 +25,24 @@
             </div>
         </div>
 
+        <!-- Sección de votación -->
         <div id="votingSection" class="mt-4">
-            <h3 class="text-light"></h3>
+            <h3 class="text-light">Votación</h3>
             <div id="userButtons" class="d-flex flex-wrap gap-2 justify-content-center mt-3"></div>
         </div>
 
+        <!-- Sección de resultados -->
         <div id="resultsSection" class="mt-4" style="display: none;">
-            <h3 class="text-light"></h3>
+            <h3 class="text-light">Ganador</h3>
             <p id="winnerName" class="display-5 text-success"></p>
         </div>
 
+        <!-- Botones de control -->
         <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
             <button id="showResultsButton" class="btn-general">Mostrar</button>
             <button id="nextQuestionButton" class="btn-general" style="display: none;">Siguiente</button>
             <button id="logoutButton" class="btn-general">Salir</button>
         </div>
-        
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>

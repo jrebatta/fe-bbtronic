@@ -1,61 +1,51 @@
 import API_BASE_URL from './ambiente.js';
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionCode = urlParams.get('sessionCode');
     const username = urlParams.get('username');
+
     const questionsContainer = document.getElementById("questionsContainer");
     const submitQuestionsButton = document.getElementById("submitQuestionsButton");
     const anonymousCheck = document.getElementById("anonymousCheck");
     const errorElement = document.getElementById("error");
+    const logoutButton = document.getElementById("logoutButton");
 
     let questionsSent = false;
 
+    // Configuración del WebSocket
     const socket = new SockJS(`${API_BASE_URL}/websocket`);
     const stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function () {
-        stompClient.subscribe(`/topic/${sessionCode}`, function (message) {
-            try {
-                const parsedMessage = JSON.parse(message.body);
-                if (parsedMessage.event === "allReady") {
-                    window.location.href = `mostrar_preguntas.html?sessionCode=${sessionCode}&username=${username}`;
-                }
-            } catch (error) {
-                console.error("Error al procesar el mensaje del WebSocket:", error);
+    stompClient.connect({}, () => {
+        stompClient.subscribe(`/topic/${sessionCode}`, (message) => {
+            const parsedMessage = JSON.parse(message.body);
+            if (parsedMessage.event === "allReady") {
+                redirectToPage(`mostrar_preguntas.html`);
             }
         });
     });
 
     function loadUsers() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al cargar usuarios.");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                data.users.forEach(user => {
-                    if (user.username !== username) createQuestionInput(user.username);
-                });
+                data.users
+                    .filter(user => user.username !== username)
+                    .forEach(user => createQuestionInput(user.username));
             })
-            .catch(() => errorElement.textContent = "Error al cargar usuarios.");
+            .catch(() => displayError("Error al cargar usuarios."));
     }
 
     function createQuestionInput(toUser) {
         const questionDiv = document.createElement("div");
         questionDiv.classList.add("question-item");
 
-        const label = document.createElement("label");
-        label.textContent = `Pregunta para ${toUser}:`;
+        questionDiv.innerHTML = `
+            <label>Pregunta para ${toUser}:</label>
+            <input type="text" data-to-user="${toUser}" placeholder="Escribe tu pregunta aquí">
+        `;
 
-        const input = document.createElement("input");
-        input.type = "text";
-        input.dataset.toUser = toUser;
-
-        questionDiv.appendChild(label);
-        questionDiv.appendChild(input);
         questionsContainer.appendChild(questionDiv);
     }
 
@@ -64,87 +54,71 @@ document.addEventListener('DOMContentLoaded', function () {
         questionsSent = true;
 
         const inputs = questionsContainer.querySelectorAll("input");
-        let questionsReady = true;
-
-        // Verificar que todos los inputs estén completos
-        inputs.forEach(input => {
-            const question = input.value.trim();
-            if (!question) {
-                questionsReady = false;
-            }
-        });
-
-        // Solo enviar las preguntas si todos los campos están completos
-        if (questionsReady) {
-            inputs.forEach(input => {
-                const question = input.value.trim();
-                fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/send-question`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ fromUser: username, toUser: input.dataset.toUser, question, anonymous: anonymousCheck.checked })
-                });
-            });
-            setUserReady();
-        } else {
-            // Mostrar mensaje de error y permitir intentar de nuevo
+        if ([...inputs].some(input => !input.value.trim())) {
             questionsSent = false;
-            errorElement.textContent = "Por favor, completa todas las preguntas antes de continuar.";
+            return displayError("Por favor, completa todas las preguntas.");
         }
+
+        inputs.forEach(input => sendQuestion(input));
+        markUserReady();
     });
 
-    function setUserReady() {
+    function sendQuestion(input) {
+        const payload = {
+            fromUser: username,
+            toUser: input.dataset.toUser,
+            question: input.value.trim(),
+            anonymous: anonymousCheck.checked
+        };
+
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/send-question`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).catch(() => displayError("Error al enviar pregunta."));
+    }
+
+    function markUserReady() {
         fetch(`${API_BASE_URL}/api/users/${username}/ready`, { method: "POST" })
-            .then(() => {
-                console.log("Usuario marcado como listo.");
-                checkAllReady(); // Llama a la verificación
-            })
-            .catch(error => console.error("Error al marcar usuario como listo:", error));
+            .then(() => checkAllReady())
+            .catch(() => displayError("Error al marcar usuario como listo."));
     }
 
     function checkAllReady() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/check-all-ready`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error al verificar si todos están listos.");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.allReady) {
                     stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "allReady" }));
                 } else {
-                    // Mostrar el mensaje en pantalla
-                    errorElement.textContent = data.message || "Aún faltan usuarios por estar listos.";
+                    displayError(data.message || "Aún faltan usuarios por estar listos.");
                 }
             })
-            .catch(error => console.error("Error al verificar si todos están listos:", error));
+            .catch(() => displayError("Error al verificar usuarios listos."));
     }
 
-    document.getElementById("logoutButton").addEventListener("click", function () {
+    logoutButton.addEventListener("click", () => {
         const sessionToken = sessionStorage.getItem("sessionToken");
-
-        if (!sessionToken) {
-            window.location.href = "/index.html";
-            return;
-        }
-
-        fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
-            method: "DELETE"
-        })
-            .then(response => response.text())
-            .then(message => {
-                console.log(message);
-                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
-                    event: "userLeft",
-                    username
-                }));
-
-                sessionStorage.removeItem("sessionToken");
-                sessionStorage.removeItem("username");
-                window.location.href = "/index.html";
+        fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, { method: "DELETE" })
+            .then(() => {
+                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "userLeft", username }));
+                clearSessionAndRedirect();
             })
-            .catch(error => console.error("Error cerrando sesión:", error));
+            .catch(() => displayError("Error al cerrar sesión."));
     });
+
+    function displayError(message) {
+        errorElement.textContent = message;
+    }
+
+    function clearSessionAndRedirect() {
+        sessionStorage.clear();
+        redirectToPage("/index.html");
+    }
+
+    function redirectToPage(page) {
+        window.location.href = `${page}?sessionCode=${sessionCode}&username=${username}`;
+    }
 
     loadUsers();
 });

@@ -8,8 +8,8 @@
 </head>
 <body>
     <!-- Video de fondo -->
-    <video autoplay loop muted playsinline id="backgroundVideo">
-        <source src="/videos/fondo2.webm" type="video/mp4">
+    <video id="backgroundVideo" autoplay loop muted playsinline>
+        <source src="/videos/fondo2.webm" type="video/webm">
         Tu navegador no soporta el video HTML5.
     </video>
 
@@ -19,7 +19,14 @@
         
         <form id="sessionForm" class="w-100" style="max-width: 400px;">
             <div class="mb-3">
-                <input type="text" id="username" class="form-control" placeholder="Nombre" required>
+                <input 
+                    type="text" 
+                    id="username" 
+                    class="form-control" 
+                    placeholder="Nombre" 
+                    required 
+                    aria-label="Nombre de usuario"
+                >
             </div>
             <button type="submit" class="btn btn-primary w-100">Crear</button>
             <div id="error" class="text-danger mt-3"></div>

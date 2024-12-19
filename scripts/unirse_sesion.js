@@ -1,55 +1,47 @@
 import API_BASE_URL from './ambiente.js';
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById("joinSessionForm");
-    const submitButton = document.querySelector("#joinSessionForm button[type='submit']");
+    const submitButton = document.querySelector(".btn-submit");
     const errorElement = document.getElementById("error");
 
     // Eliminar la cadena de consulta de la URL
-    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    const cleanUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     window.history.replaceState({}, document.title, cleanUrl);
 
-    function validateInputLength(input) {
-        // Limitar la entrada a 4 caracteres
-        if (input.value.length > 4) {
-            input.value = input.value.slice(0, 4); // Truncar a los primeros 4 dígitos
-        }
-    }
-
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
+
         const sessionCode = document.getElementById("sessionCode").value;
         const username = document.getElementById("username").value;
 
-        // Deshabilitar el botón al inicio
+        // Deshabilitar el botón
         submitButton.disabled = true;
 
-        fetch(`${API_BASE_URL}/api/game-sessions/join`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ sessionCode, username })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(errorData => {
-                        throw new Error(errorData.error);
-                    });
-                }
-                return response.json(); // Asegúrate de que haya un cuerpo JSON en la respuesta
-            })
-            .then(data => {
-                sessionStorage.setItem("sessionToken", data.sessionToken);
-                sessionStorage.setItem("username", username);
-                window.location.href = `sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
-            })
-            .catch(error => {
-                // Habilitar el botón nuevamente en caso de error
-                submitButton.disabled = false;
-                // Mostrar el mensaje de error específico del backend
-                errorElement.textContent = error.message;
-                console.error("Error:", error.message);
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/game-sessions/join`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ sessionCode, username })
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error);
+            }
+
+            const data = await response.json();
+            sessionStorage.setItem("sessionToken", data.sessionToken);
+            sessionStorage.setItem("username", username);
+
+            window.location.href = `sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
+        } catch (error) {
+            errorElement.textContent = error.message;
+            console.error("Error:", error.message);
+        } finally {
+            submitButton.disabled = false;
+        }
     });
 });

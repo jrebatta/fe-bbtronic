@@ -8,7 +8,7 @@ body {
     height: 100vh;
     color: #FFFFFF;
     overflow: hidden;
-    background-color: #121212; /* Fondo oscuro como respaldo */
+    background-color: #121212;
 }
 
 /* Video de fondo */
@@ -18,189 +18,187 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Asegura que el video cubra toda la pantalla */
-    z-index: -1; /* Ubicar el video detrás del contenido */
+    object-fit: cover;
+    z-index: -1;
 }
 
 /* Contenedor de preguntas */
 #preguntas {
-    background-color: rgba(0, 0, 0, 0.8) !important; /* Fondo negro con 80% de transparencia */
-    color: white !important; /* Texto en blanco */
-    border-radius: 30px; /* Bordes redondeados */
-    padding: 30px; /* Ajustar el espacio interior */
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8) !important; /* Sombra */
-    border: 7px solid #bb00ff !important; /* Borde morado */
-    max-width: 50vw; /* Reducir el ancho máximo al 50% del viewport */
-    width: 100%; /* Usar el 100% del ancho disponible */
-    max-height: 80%; /* Altura máxima del contenedor */
-    margin: 20px auto; /* Centrar el contenedor horizontalmente */
-    overflow-y: auto; /* Habilitar scroll si es necesario */
-    display: flex; /* Alinear contenido */
-    align-items: center; /* Centrar verticalmente */
-    justify-content: center; /* Centrar horizontalmente */
-    font-size: 2.5rem; /* Tamaño aún más grande para destacar */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
+    border: 5px solid #bb00ff;
+    max-width: 50vw;
+    width: 100%;
+    max-height: 70%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
     font-weight: bold;
-    line-height: 1.8; /* Espaciado entre líneas */
+    line-height: 1.8;
     text-shadow: 
-    0 0 15px #bb00ff, /* Capa de brillo cercana */
-    0 0 30px #bb00ff, /* Capa de brillo intermedia */
-    0 0 50px #bb00ff, /* Capa de brillo extendida */
-    0 0 70px #bb00ff; /* Capa de brillo más intensa */
+        0 0 15px #bb00ff, 
+        0 0 30px #bb00ff;
+}
+
+/* Texto de la pregunta */
+#questionText {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Texto del título "Quién es más probable..." */
+#questionNumber {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Botones distribuidos */
+#userButtons {
+    display: grid; /* Usar grid para distribuir botones */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Distribución dinámica */
+    gap: 15px; /* Espaciado entre botones */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    padding: 10px 20px;
+    margin-top: 20px;
+    justify-items: center; /* Centrar los botones en cada celda */
 }
 
 /* Botones comunes */
 #nextQuestionButton, #logoutButton, #showResultsButton, .btn-general {
-    font-size: 15px; /* Tamaño de texto más grande */
+    font-size: 14px; /* Tamaño ajustado */
     color: #FFFFFF;
     background: #000000;
     border: 2px solid #FFFFFF;
-    border-radius: 9px; /* Bordes más redondeados */
-    padding: 10px 20px; /* Tamaño aumentado */
+    border-radius: 10px;
+    padding: 12px 20px;
     text-transform: uppercase;
     transition: all 0.3s ease;
     cursor: pointer;
-    display: block;
-    margin: 0 auto; /* Centrar el botón horizontalmente */
-    max-width: 200px; /* Limitar el ancho máximo del botón */
-    margin-top: 30px; /* Más espacio respecto al formulario */
+    max-width: 180px; /* Tamaño proporcional */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centrar texto verticalmente */
 }
 
 /* Efecto hover para botones */
 #nextQuestionButton:hover, #logoutButton:hover, #showResultsButton:hover, .btn-general:hover {
-    background: #bb00ff; /* Cambiar fondo al morado */
-    color: #FFFFFF !important;
-    border-color: #bb00ff; /* Cambiar borde al morado */
-    transform: scale(1.05); /* Efecto de hover menos pronunciado */
+    background: #bb00ff;
+    border-color: #bb00ff;
+    transform: scale(1.05);
     text-shadow: 0 0 5px #FFFFFF, 0 0 20px #FFFFFF;
 }
 
-/* Contenedor de botones de usuario */
+/* Botones de votación */
 #userButtons .btn-general {
-    margin: 10px; /* Espaciado entre botones */
-    display: inline-block; /* Mantener alineación flexible */
+    font-size: 13px;
+    padding: 10px 15px; /* Espaciado interno adecuado */
 }
 
-/* Ajustes responsivos */
-@media (max-width: 768px) {
-    #preguntas {
-        max-width: 90%; /* Reducir ancho en móviles */
-        padding: 20px; /* Menos espacio interior */
-        border-radius: 15px; /* Bordes menos redondeados */
-    }
-
-    #questionText {
-        font-size: 1.5rem; /* Reducir el tamaño del texto */
-    }
-
-    #questionNumber {
-        font-size: 2rem; /* Reducir el tamaño del título */
-        color: #FFFFFF !important;
-    }
-
-    .btn-lg {
-        font-size: 1.2rem; /* Reducir tamaño de los botones */
-        padding: 10px 20px; /* Ajustar el padding */
-    }
-
-    .container-fluid {
-        padding: 10px; /* Reducir el padding general */
-    }
-
-    #votingSection {
-        margin-top: 20px; /* Menos espacio superior */
-    }
-}
-
-@media (max-width: 480px) {
-    #preguntas {
-        max-width: 100%; /* Usar todo el ancho */
-        padding: 10px; /* Menos espacio interior */
-    }
-
-    #questionText {
-        font-size: 1.2rem; /* Reducir más el tamaño del texto */
-    }
-
-    .btn-lg {
-        font-size: 1rem; /* Botones más pequeños */
-    }
-
-    #votingSection h3, #resultsSection h3 {
-        font-size: 1.2rem; /* Reducir tamaño del texto de las secciones */
-    }
-
-    #showResultsButton, #nextQuestionButton, #logoutButton, .btn-general {
-        font-size: 1rem; /* Tamaño del texto más pequeño */
-        padding: 10px 20px; /* Reducir el padding */
-        max-width: 150px; /* Reducir el ancho máximo */
-        border-radius: 8px; /* Bordes ligeramente redondeados */
-    }
-}
-
-#questionNumber1 {
-    font-size: 2.2rem; /* Tamaño del texto del título */
-    font-weight: bold;
-    color: #FFFFFF !important; /* Color blanco */
-    text-align: center; /* Centrar texto */
-    margin-bottom: 20px; /* Espaciado inferior */
-}
-
+/* Botones deshabilitados */
 #userButtons .btn-general:disabled {
-    background: #555555 !important; /* Fondo gris para indicar deshabilitado */
-    color: #aaaaaa !important; /* Texto más claro */
-    border-color: #555555 !important; /* Borde igual al fondo */
-    cursor: not-allowed; /* Cambia el cursor */
-    transform: none; /* Sin efecto hover */
-    text-shadow: none; /* Sin sombra de texto */
-}
-
-#userButtons .btn-general.disabled {
-    opacity: 0.6; /* Reduce la opacidad */
-    pointer-events: none; /* Desactiva interacciones */
-}
-
-
-
-
-/* Contenedor del mensaje del ganador */
-#resultsSection {
-    border-radius: 15px; /* Bordes redondeados */
-    padding: 20px; /* Espaciado interno */
-    display: none; /* Ocultar por defecto */
-    text-align: center; /* Centrar texto */
+    background: #555555 !important;
+    color: #aaaaaa !important;
+    border-color: #555555 !important;
+    cursor: not-allowed;
+    transform: none;
+    text-shadow: none;
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 /* Contenedor del mensaje del ganador */
 #resultsSection {
-    background: none; /* Sin fondo */
-    padding: 20px; /* Espaciado interno */
-    text-align: center; /* Centrar texto */
-    display: none; /* Ocultar por defecto */
+    padding: 20px;
+    display: none;
+    text-align: center;
 }
 
 /* Texto del ganador */
 #resultsSection #winnerName {
-    font-size: 2.5rem; /* Tamaño grande */
-    font-weight: bold; /* Texto en negrita */
-    color: #ffffff !important; /* Texto celeste */
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff !important;
     text-shadow: 
-    0 0 15px #bb00ff, /* Capa de brillo cercana */
-    0 0 30px #bb00ff, /* Capa de brillo intermedia */
-    0 0 50px #bb00ff, /* Capa de brillo extendida */
-    0 0 70px #bb00ff; /* Capa de brillo más intensa */
-    margin: 20px 0; /* Espaciado superior e inferior */
-    animation: winnerFadeIn 1s ease-in-out; /* Animación al mostrar */
+        0 0 15px #bb00ff, 
+        0 0 30px #bb00ff;
+    margin: 20px 0;
+    animation: winnerFadeIn 1s ease-in-out;
 }
 
 /* Animación para el texto del ganador */
 @keyframes winnerFadeIn {
     from {
-        opacity: 0; /* Comienza invisible */
-        transform: scale(0.8); /* Comienza más pequeño */
+        opacity: 0;
+        transform: scale(0.8);
     }
     to {
-        opacity: 1; /* Totalmente visible */
-        transform: scale(1); /* Tamaño original */
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    #preguntas {
+        max-width: 90%;
+        padding: 30px;
+        font-size: 1.5rem;
+        border-radius: 15px;
+    }
+
+    #questionText {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+
+    #questionNumber {
+        font-size: 1.4rem;
+    }
+
+    #nextQuestionButton, #logoutButton, #showResultsButton, .btn-general {
+        font-size: 13px;
+        padding: 10px 15px;
+        max-width: 160px;
+    }
+
+    #userButtons {
+        gap: 10px; /* Menor espacio entre botones */
+    }
+}
+
+@media (max-width: 480px) {
+    #preguntas {
+        max-width: 100%;
+        padding: 20px;
+        font-size: 1.2rem;
+    }
+
+    #questionText {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    #questionNumber {
+        font-size: 1.2rem;
+    }
+
+    #nextQuestionButton, #logoutButton, #showResultsButton, .btn-general {
+        font-size: 12px;
+        padding: 8px 12px;
+        max-width: 140px;
+    }
+
+    #userButtons {
+        gap: 8px;
+    }
+}
