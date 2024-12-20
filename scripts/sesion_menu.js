@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log("Yo Nunca Nunca iniciado, redirigiendo...");
                     window.location.href = `yo_nunca_nunca.html?sessionCode=${sessionCode}&username=${username}`;
                 }
+                if (parsedMessage.event === "preguntasIncomodasStarted") {
+                    console.log("Preguntas Incomodas iniciado, redirigiendo...");
+                    window.location.href = `preguntas_incomodas.html?sessionCode=${sessionCode}&username=${username}`;
+                }
 
                 if (parsedMessage.event === "quienEsMasProbableStarted") {
                     console.log("Quien Es Más Probable iniciado, redirigiendo...");
@@ -85,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (isCreator) {
             document.getElementById("startGameButton").addEventListener("click", startGame); // Reasigna funcionalidad
+            document.getElementById("preguntasIncomodas").addEventListener("click", startPreguntasIncomodas); // Reasigna funcionalidad
             document.getElementById("yoNuncaNunca").addEventListener("click", startYoNuncaNunca); // Añadido para Yo Nunca Nunca
             document.getElementById("quienEsMasProbable").addEventListener("click", startQuienEsMasProbable);
             document.getElementById("culturaPendeja").addEventListener("click", startCulturaPendeja); // Añadido para Yo Nunca Nunca
@@ -123,6 +128,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
+    }
+
+    function startPreguntasIncomodas(){
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/start-preguntas-incomodas`, {
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Preguntas incomodas iniciado. Enviando evento a través del WebSocket.");
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "preguntasIncomodasStarted" }));
+                } else {
+                    throw new Error("Error al iniciar Quien Es Más Probable.");
+                }
+            })
+            .catch(error => console.error("Error al iniciar Quien Es Más Probable:", error));
+
     }
 
     function startQuienEsMasProbable() {

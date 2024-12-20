@@ -1,0 +1,133 @@
+/* Estilo general */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #FFFFFF;
+    overflow: hidden;
+    background-color: #121212;
+}
+
+/* Video de fondo */
+#backgroundVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Contenedor de preguntas */
+#preguntas {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
+    border: 7px solid #bb00ff;
+    max-width: 50vw;
+    width: 100%;
+    margin: 20px auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1.8;
+    text-shadow: 0 0 15px #bb00ff, 0 0 30px #bb00ff, 0 0 50px #bb00ff, 0 0 70px #bb00ff;
+}
+
+/* Texto del usuario */
+#toUserText {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Botones */
+#nextQuestionButton, #logoutButton {
+    font-size: 15px;
+    color: #FFFFFF;
+    background: #000000;
+    border: 2px solid #FFFFFF;
+    border-radius: 9px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    max-width: 200px;
+    margin-top: 30px;
+}
+
+#nextQuestionButton:hover, #logoutButton:hover {
+    background: #bb00ff;
+    color: #FFFFFF !important;
+    border-color: #bb00ff;
+    transform: scale(1.05);
+    text-shadow: 0 0 5px #FFFFFF, 0 0 20px #FFFFFF;
+}
+
+/* Etiqueta del usuario */
+.to-user-label {
+    display: block;
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0 0 1px #FFFFFF, 0 0 1px #ffffff;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    #preguntas {
+        max-width: 90%; /* Reducir ancho en tablets */
+        padding: 20px;
+        font-size: 2rem; /* Reducir tamaño de fuente */
+        border-radius: 20px;
+    }
+
+    #toUserText {
+        font-size: 1.3rem; /* Reducir tamaño del texto del usuario */
+    }
+
+    .to-user-label {
+        font-size: 1.3rem;
+    }
+
+    #nextQuestionButton, #logoutButton {
+        font-size: 14px; /* Reducir tamaño del texto de los botones */
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    #preguntas {
+        max-width: 100%; /* Usar todo el ancho en móviles */
+        padding: 15px;
+        font-size: 1.5rem; /* Reducir más el tamaño de fuente */
+        border-radius: 15px;
+    }
+
+    #toUserText {
+        font-size: 1.1rem; /* Ajustar tamaño del texto del usuario */
+    }
+
+    .to-user-label {
+        font-size: 1.1rem;
+    }
+
+    #nextQuestionButton, #logoutButton {
+        font-size: 12px; /* Tamaño más pequeño para botones */
+        padding: 6px 12px;
+        max-width: 150px; /* Reducir el ancho máximo */
+    }
+}
