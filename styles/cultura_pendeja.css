@@ -40,7 +40,8 @@ body {
 
 /* Botones */
 #nextQuestionButton,
-#logoutButton {
+#logoutButton,
+#lobbyButton {
     font-size: 15px;
     color: #FFFFFF;
     background: #000000;
@@ -55,7 +56,8 @@ body {
 }
 
 #nextQuestionButton:hover,
-#logoutButton:hover {
+#logoutButton:hover,
+#lobbyButton:hover {
     background: #bb00ff;
     border-color: #bb00ff;
     transform: scale(1.05);
@@ -72,7 +74,8 @@ body {
     }
 
     #nextQuestionButton,
-    #logoutButton {
+    #logoutButton,
+    #lobbyButton {
         font-size: 13px; /* Ajustar tamaño del texto */
         padding: 8px 15px; /* Ajustar padding */
         max-width: 160px; /* Ancho más pequeño */
@@ -89,7 +92,8 @@ body {
     }
 
     #nextQuestionButton,
-    #logoutButton {
+    #logoutButton,
+    #lobbyButton {
         font-size: 12px;
         padding: 6px 12px;
         max-width: 140px;

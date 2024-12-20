@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const nextQuestionButton = document.getElementById("nextQuestionButton");
     const logoutButton = document.getElementById("logoutButton");
+    const lobbyButton = document.getElementById("lobbyButton");
     const questionText = document.getElementById("questionText");
 
     const socket = new SockJS(`${API_BASE_URL}/websocket`);
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     logoutButton.addEventListener("click", handleLogout);
     nextQuestionButton.addEventListener("click", fetchNextQuestion);
+    lobbyButton.addEventListener("click", returnToLobby);
 
     function subscribeToQuestions() {
         stompClient.subscribe(`/topic/${sessionCode}`, (message) => {
@@ -27,11 +29,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 const parsedMessage = JSON.parse(message.body);
                 if (parsedMessage.event === "newCulturaPendejaQuestion") {
                     updateUI(parsedMessage.data.question);
+                } else if (parsedMessage.event === "returnToLobby") {
+                    redirectToLobby(parsedMessage.isCreator);
                 }
             } catch (error) {
                 console.error("Error procesando mensaje:", error);
             }
         });
+    }
+
+    function fetchSessionDetails() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
+            .then(response => {
+                if (!response.ok) throw new Error("Error obteniendo detalles de la sesión");
+                return response.json();
+            })
+            .then(data => {
+                const isCreator = data.creator === username;
+
+                // Mostrar botones según el rol
+                nextQuestionButton.style.display = isCreator ? "block" : "none";
+                lobbyButton.style.display = isCreator ? "block" : "none";
+
+                // Si es creador, cargar la primera pregunta
+                if (isCreator) fetchNextQuestion();
+            })
+            .catch(error => console.error("Error obteniendo detalles:", error));
+    }
+
+    function returnToLobby() {
+        // Enviar evento para redirigir a todos los usuarios
+        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+            event: "returnToLobby",
+            isCreator: true
+        }));
+
+        // Redirigir al lobby como creador
+        redirectToLobby(true);
+    }
+
+    function redirectToLobby(isCreator) {
+        const url = isCreator 
+            ? `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}&role=creator` 
+            : `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
+        window.location.href = url;
     }
 
     function handleLogout() {
@@ -64,20 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "newCulturaPendejaQuestion", data: { question: data } }));
             })
             .catch(error => console.error("Error obteniendo pregunta:", error));
-    }
-
-    function fetchSessionDetails() {
-        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
-            .then(response => {
-                if (!response.ok) throw new Error("Error obteniendo detalles de la sesión");
-                return response.json();
-            })
-            .then(data => {
-                const isCreator = data.creator === username;
-                nextQuestionButton.style.display = isCreator ? "block" : "none";
-                if (isCreator) fetchNextQuestion();
-            })
-            .catch(error => console.error("Error obteniendo detalles:", error));
     }
 
     function updateUI(question) {
