@@ -77,7 +77,7 @@ function updateUI(question) {
 
     // Llamar al endpoint para obtener una pregunta (Solo el creador puede llamar este método)
 function fetchNextQuestion() {
-    fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-yo-nunca-nunca?tipo=1`)
+    fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-yo-nunca-nunca?tipo=all`)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Error al obtener la siguiente pregunta");

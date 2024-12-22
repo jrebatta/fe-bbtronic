@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
     function fetchNextQuestion() {
-        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-preguntas-incomodas?tipo=1`)
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-preguntas-incomodas?tipo=all`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al obtener la siguiente pregunta.");
