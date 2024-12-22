@@ -10,8 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const anonymousCheck = document.getElementById("anonymousCheck");
     const errorElement = document.getElementById("error");
     const logoutButton = document.getElementById("logoutButton");
+    const lobbyButton = document.getElementById("lobbyButton");
 
     let questionsSent = false;
+    let creatorName = ""; // Variable para almacenar el nombre del creador
 
     // Configuración del WebSocket
     const socket = new SockJS(`${API_BASE_URL}/websocket`);
@@ -22,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const parsedMessage = JSON.parse(message.body);
             if (parsedMessage.event === "allReady") {
                 redirectToPage(`mostrar_preguntas.html`);
+            } else if (parsedMessage.event === "returnToLobby") {
+                redirectToLobby(false);
             }
         });
     });
@@ -30,11 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
             .then(response => response.json())
             .then(data => {
+                creatorName = data.creator; // Guarda el nombre del creador
+                setupLobbyButton(); // Configura el botón Lobby
                 data.users
                     .filter(user => user.username !== username)
                     .forEach(user => createQuestionInput(user.username));
             })
             .catch(() => displayError("Error al cargar usuarios."));
+    }
+
+    function setupLobbyButton() {
+        if (username === creatorName) {
+            lobbyButton.style.display = "block";
+            lobbyButton.addEventListener("click", returnToLobby);
+        }
     }
 
     function createQuestionInput(toUser) {
@@ -95,6 +108,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(() => displayError("Error al verificar usuarios listos."));
+    }
+
+    function returnToLobby() {
+        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+            event: "returnToLobby",
+            isCreator: true
+        }));
+        redirectToLobby(true);
+    }
+
+    function redirectToLobby(isCreator) {
+        const url = isCreator
+            ? `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}&role=creator`
+            : `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
+        window.location.href = url;
     }
 
     logoutButton.addEventListener("click", () => {

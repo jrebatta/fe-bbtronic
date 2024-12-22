@@ -202,3 +202,24 @@ button:hover {
         max-width: 150px;
     }
 }
+
+#lobbyButton {
+    font-size: 18px;
+    background: #ffcc00;
+    color: #000000;
+    border: 2px solid #FFFFFF;
+    border-radius: 12px;
+    padding: 12px 20px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    max-width: 200px;
+    margin-top: 10px;
+}
+
+#lobbyButton:hover {
+    background: #ffaa00;
+    border-color: #FFFFFF;
+    transform: scale(1.05);
+    text-shadow: 0 0 5px #FFFFFF, 0 0 15px #FFFFFF;
+}
