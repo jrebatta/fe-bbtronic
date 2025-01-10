@@ -9,10 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!sessionToken || !username) redirectToHome();
 
-    const nextQuestionButton = document.getElementById("nextQuestionButton");
-    const logoutButton = document.getElementById("logoutButton");
-    const lobbyButton = document.getElementById("lobbyButton");
-
     const socket = new SockJS(`${API_BASE_URL}/websocket`);
     const stompClient = Stomp.over(socket);
 
@@ -21,15 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
         loadSessionDetails();
     });
 
-    logoutButton.addEventListener("click", handleLogout);
-    lobbyButton.addEventListener("click", returnToLobby);
+    document.getElementById("logoutButton").addEventListener("click", handleLogout);
+    document.getElementById("lobbyButton").addEventListener("click", returnToLobby);  // Button for returning to the lobby
 
     function subscribeToSession() {
         stompClient.subscribe(`/topic/${sessionCode}`, (message) => {
             try {
                 const { event, question, numeroDePregunta } = JSON.parse(message.body);
                 if (event === "update") updateUI(question, numeroDePregunta);
-                if (event === "returnToLobby") redirectToLobby(false);
+                else if (event === "returnToLobby") redirectToLobbyPage();
             } catch (error) {
                 console.error("Error procesando el mensaje:", error);
             }
@@ -48,10 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setupUI() {
+        const nextButton = document.getElementById("nextQuestionButton");
+        const lobbyButton = document.getElementById("lobbyButton");
         if (username === creatorName) {
-            nextQuestionButton.style.display = "block";
-            lobbyButton.style.display = "block";
-            nextQuestionButton.addEventListener("click", fetchNextQuestion);
+            nextButton.style.display = "block";
+            nextButton.addEventListener("click", fetchNextQuestion);
+            lobbyButton.style.display = "block";  // Show the lobby button for the creator
         }
     }
 
@@ -88,21 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("questionNumber").textContent = number || "-";
     }
 
-    function returnToLobby() {
-        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
-            event: "returnToLobby",
-            isCreator: true
-        }));
-        redirectToLobby(true);
-    }
-
-    function redirectToLobby(isCreator) {
-        const url = isCreator
-            ? `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}&role=creator`
-            : `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
-        window.location.href = url;
-    }
-
     function handleLogout() {
         fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, { method: "DELETE" })
             .then(() => {
@@ -121,5 +104,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function redirectToHome() {
         window.location.href = "/index.html";
+    }
+
+    // Function to return to the lobby
+    function returnToLobby() {
+        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+            event: "returnToLobby", isCreator: true
+        }));
+        redirectToLobbyPage();
+    }
+
+    function redirectToLobbyPage() {
+        window.location.href = `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
     }
 });

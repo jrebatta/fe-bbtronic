@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (parsedMessage.event === "newYoNuncaNuncaQuestion") {
                     const { question, user } = parsedMessage.data;
                     updateUI(question, user);
+                } else if (parsedMessage.event === "returnToLobby") {
+                    redirectToLobbyPage();
                 }
             } catch (error) {
                 console.error("Error al procesar el mensaje del WebSocket:", error);
@@ -70,30 +72,28 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("nextQuestionButton").addEventListener("click", fetchNextQuestion);
 
     // Actualizar la UI con la pregunta
-function updateUI(question) {
-    document.getElementById("questionText").textContent = question.texto;
-}
-
+    function updateUI(question) {
+        document.getElementById("questionText").textContent = question.texto;
+    }
 
     // Llamar al endpoint para obtener una pregunta (Solo el creador puede llamar este método)
-function fetchNextQuestion() {
-    fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-yo-nunca-nunca?tipo=all`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error al obtener la siguiente pregunta");
-            }
-            return response.json();
-        })
-        .then(data => {
-            const question = data; // Ahora solo trabajamos con la pregunta
-            stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
-                event: "newYoNuncaNuncaQuestion",
-                data: { question } // Solo enviamos la pregunta
-            }));
-        })
-        .catch(error => console.error("Error al obtener la siguiente pregunta:", error));
-}
-
+    function fetchNextQuestion() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-yo-nunca-nunca?tipo=1`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al obtener la siguiente pregunta");
+                }
+                return response.json();
+            })
+            .then(data => {
+                const question = data; // Ahora solo trabajamos con la pregunta
+                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+                    event: "newYoNuncaNuncaQuestion",
+                    data: { question } // Solo enviamos la pregunta
+                }));
+            })
+            .catch(error => console.error("Error al obtener la siguiente pregunta:", error));
+    }
 
     // Verificar si el usuario es el creador de la sesión
     function fetchSessionDetails() {
@@ -112,8 +112,29 @@ function fetchNextQuestion() {
                 // Si es el creador, cargar la primera pregunta
                 if (isCreator) {
                     fetchNextQuestion();
+                    showLobbyButton(); // Mostrar el botón de regreso al lobby si es creador
                 }
             })
             .catch(error => console.error("Error al obtener detalles de la sesión:", error));
+    }
+
+    // Mostrar el botón de "Regresar al lobby" solo si el usuario es el creador
+    function showLobbyButton() {
+        const lobbyButton = document.getElementById("lobbyButton");
+        lobbyButton.style.display = "block";
+        lobbyButton.addEventListener("click", returnToLobby);
+    }
+
+    // Enviar evento para regresar al lobby
+    function returnToLobby() {
+        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+            event: "returnToLobby", isCreator: true
+        }));
+        redirectToLobbyPage();
+    }
+
+    // Redirigir al lobby
+    function redirectToLobbyPage() {
+        window.location.href = `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
     }
 });

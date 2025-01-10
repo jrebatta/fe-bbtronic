@@ -5,9 +5,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Ajuste para dispositivos pequeños */
+    min-height: 100vh; /* Asegura altura mínima */
     color: #FFFFFF;
-    overflow: hidden;
+    overflow: auto; /* Permite scroll si el contenido es más alto que la pantalla */
     background-color: #121212;
 }
 
@@ -31,7 +31,10 @@ body {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
     border: 6px solid #bb00ff;
     max-width: 50vw;
+    margin: 20px auto;
     text-align: center;
+    word-wrap: break-word; /* Forzar salto de línea en texto largo */
+    box-sizing: border-box; /* Incluye padding y borde en el tamaño total */
 }
 
 /* Títulos y textos */
@@ -59,7 +62,7 @@ body {
 
 /* Botones */
 #nextQuestionButton,
-#logoutButton {
+#logoutButton, #lobbyButton {
     font-size: 15px;
     background: #000000;
     color: #FFFFFF;
@@ -70,10 +73,12 @@ body {
     cursor: pointer;
     max-width: 160px;
     margin-top: 20px;
+    width: 100%; /* Asegura que los botones ocupen todo el ancho permitido */
+    box-sizing: border-box;
 }
 
 #nextQuestionButton:hover,
-#logoutButton:hover {
+#logoutButton:hover, #lobbyButton:hover {
     background: #bb00ff;
     border-color: #bb00ff;
     transform: scale(1.05);
@@ -94,9 +99,9 @@ body {
     }
 
     #nextQuestionButton,
-    #logoutButton {
-        font-size: 14px;
-        padding: 8px 15px;
+    #logoutButton, #lobbyButton {
+        font-size: 14px; /* Texto más pequeño */
+        padding: 8px 15px; /* Ajuste del padding */
         max-width: 140px;
     }
 }
@@ -114,30 +119,9 @@ body {
     }
 
     #nextQuestionButton,
-    #logoutButton {
+    #logoutButton, #lobbyButton {
         font-size: 12px;
         padding: 6px 12px;
         max-width: 120px;
     }
 }
-
-#lobbyButton {
-    font-size: 15px;
-    background: #000000;
-    color: #ffffff;
-    border: 2px solid #ffffff;
-    border-radius: 10px;
-    padding: 10px 20px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    max-width: 160px;
-    margin-top: 20px;
-}
-
-#lobbyButton:hover {
-    background: #bb00ff;
-    border-color: #000000;
-    transform: scale(1.05);
-    text-shadow: 0 0 3px #ffffff, 0 0 10px #ffffff;
-}
-

@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showResultsButton = document.getElementById("showResultsButton");
     const nextQuestionButton = document.getElementById("nextQuestionButton");
     const questionText = document.getElementById("questionText");
+    const lobbyButton = document.getElementById("lobbyButton");
 
     // Configuración del WebSocket
     const socket = new SockJS(`${API_BASE_URL}/websocket`);
@@ -25,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateUI(parsedMessage.data);
             } else if (parsedMessage.event === "votingResults") {
                 displayResults(parsedMessage.winner);
+            } else if (parsedMessage.event === "returnToLobby") {
+                redirectToLobbyPage();
             }
         });
 
@@ -48,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleCreatorControls(isCreator) {
         nextQuestionButton.style.display = isCreator ? "block" : "none";
         showResultsButton.style.display = isCreator ? "block" : "none";
+        lobbyButton.style.display = isCreator ? "block" : "none"; // Mostrar el botón de regresar al lobby
     }
 
     function updateUI(question) {
@@ -113,6 +117,19 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(console.error);
     }
 
+    // Función para emitir evento de regresar al lobby
+    function returnToLobby() {
+        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+            event: "returnToLobby"
+        }));
+        redirectToLobbyPage();
+    }
+
+    // Redirigir al lobby
+    function redirectToLobbyPage() {
+        window.location.href = `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
+    }
+
     // Eventos de botones
     nextQuestionButton.addEventListener("click", fetchNextQuestion);
     showResultsButton.addEventListener("click", () => {
@@ -124,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(console.error);
     });
+    lobbyButton.addEventListener("click", returnToLobby); // Agregar evento al botón de lobby
 
     document.getElementById("logoutButton").addEventListener("click", () => {
         const sessionToken = sessionStorage.getItem("sessionToken");

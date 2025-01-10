@@ -7,7 +7,7 @@ body {
     align-items: center;
     min-height: 100vh; /* Asegura altura mínima */
     color: #FFFFFF;
-    overflow: hidden;
+    overflow: auto; /* Permitir scroll si el contenido excede el alto */
     background-color: #121212;
 }
 
@@ -36,13 +36,15 @@ body {
     font-size: 2.5rem;
     font-weight: bold;
     text-shadow: 0 0 15px #bb00ff, 0 0 30px #bb00ff;
+    word-wrap: break-word; /* Forzar salto de línea en texto largo */
+    box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
 }
 
 /* Botones */
 #nextQuestionButton,
 #logoutButton,
 #lobbyButton {
-    font-size: 15px;
+    font-size: 1rem; /* Escalable para pantallas pequeñas */
     color: #FFFFFF;
     background: #000000;
     border: 2px solid #FFFFFF;
@@ -53,6 +55,8 @@ body {
     cursor: pointer;
     max-width: 200px;
     margin-top: 30px;
+    width: 100%; /* Adaptar al contenedor */
+    box-sizing: border-box;
 }
 
 #nextQuestionButton:hover,
@@ -76,7 +80,7 @@ body {
     #nextQuestionButton,
     #logoutButton,
     #lobbyButton {
-        font-size: 13px; /* Ajustar tamaño del texto */
+        font-size: 0.9rem; /* Ajustar tamaño del texto */
         padding: 8px 15px; /* Ajustar padding */
         max-width: 160px; /* Ancho más pequeño */
         margin-top: 20px; /* Espacio entre botones */
@@ -94,7 +98,7 @@ body {
     #nextQuestionButton,
     #logoutButton,
     #lobbyButton {
-        font-size: 12px;
+        font-size: 0.8rem;
         padding: 6px 12px;
         max-width: 140px;
         margin-top: 15px;

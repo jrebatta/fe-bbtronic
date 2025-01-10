@@ -7,7 +7,7 @@ body {
     align-items: center;
     height: 100vh;
     color: #FFFFFF;
-    overflow: hidden;
+    overflow: auto; /* Permite desplazamiento si el contenido excede la pantalla */
     background-color: #121212;
 }
 
@@ -33,7 +33,7 @@ body {
     max-width: 50vw;
     width: 100%;
     margin: 20px auto;
-    overflow-y: auto;
+    overflow-y: auto; /* Permite el desplazamiento si el contenido es largo */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,7 +53,7 @@ body {
 }
 
 /* Botones */
-#nextQuestionButton, #logoutButton {
+#nextQuestionButton, #logoutButton, #lobbyButton {
     font-size: 15px;
     color: #FFFFFF;
     background: #000000;
@@ -67,7 +67,7 @@ body {
     margin-top: 30px;
 }
 
-#nextQuestionButton:hover, #logoutButton:hover {
+#nextQuestionButton:hover, #logoutButton:hover, #lobbyButton:hover {
     background: #bb00ff;
     color: #FFFFFF !important;
     border-color: #bb00ff;
@@ -103,7 +103,7 @@ body {
         font-size: 1.3rem;
     }
 
-    #nextQuestionButton, #logoutButton {
+    #nextQuestionButton, #logoutButton, #lobbyButton {
         font-size: 14px; /* Reducir tamaño del texto de los botones */
         padding: 8px 15px;
     }
@@ -125,7 +125,7 @@ body {
         font-size: 1.1rem;
     }
 
-    #nextQuestionButton, #logoutButton {
+    #nextQuestionButton, #logoutButton, #lobbyButton {
         font-size: 12px; /* Tamaño más pequeño para botones */
         padding: 6px 12px;
         max-width: 150px; /* Reducir el ancho máximo */

@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const lobbyButton = document.getElementById("lobbyButton");
 
     let questionsSent = false;
-    let creatorName = ""; // Variable para almacenar el nombre del creador
 
     // Configuración del WebSocket
     const socket = new SockJS(`${API_BASE_URL}/websocket`);
@@ -22,32 +21,45 @@ document.addEventListener('DOMContentLoaded', () => {
     stompClient.connect({}, () => {
         stompClient.subscribe(`/topic/${sessionCode}`, (message) => {
             const parsedMessage = JSON.parse(message.body);
+
             if (parsedMessage.event === "allReady") {
                 redirectToPage(`mostrar_preguntas.html`);
             } else if (parsedMessage.event === "returnToLobby") {
-                redirectToLobby(false);
+                redirectToLobby(parsedMessage.isCreator);
             }
         });
+
+        fetchSessionDetails();
     });
+
+    function fetchSessionDetails() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al obtener detalles de la sesión.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                const isCreator = data.creator === username;
+                lobbyButton.style.display = isCreator ? "block" : "none";
+
+                if (isCreator) {
+                    console.log("Eres el creador de la sesión.");
+                }
+            })
+            .catch(() => displayError("Error al cargar detalles de la sesión."));
+    }
 
     function loadUsers() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}`)
             .then(response => response.json())
             .then(data => {
-                creatorName = data.creator; // Guarda el nombre del creador
-                setupLobbyButton(); // Configura el botón Lobby
                 data.users
                     .filter(user => user.username !== username)
                     .forEach(user => createQuestionInput(user.username));
             })
             .catch(() => displayError("Error al cargar usuarios."));
-    }
-
-    function setupLobbyButton() {
-        if (username === creatorName) {
-            lobbyButton.style.display = "block";
-            lobbyButton.addEventListener("click", returnToLobby);
-        }
     }
 
     function createQuestionInput(toUser) {
@@ -110,11 +122,16 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(() => displayError("Error al verificar usuarios listos."));
     }
 
+    lobbyButton.addEventListener("click", returnToLobby);
+
     function returnToLobby() {
+        // Enviar evento para redirigir a todos los usuarios
         stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
             event: "returnToLobby",
             isCreator: true
         }));
+
+        // Redirigir al lobby como creador
         redirectToLobby(true);
     }
 

@@ -5,9 +5,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     color: #FFFFFF;
-    overflow: hidden;
+    overflow: auto; /* Permitir scroll si el contenido supera el alto de la pantalla */
     background-color: #121212;
 }
 
@@ -32,16 +32,19 @@ body {
     align-items: center;
     height: 100%;
     gap: 20px;
+    padding: 20px; /* Espaciado interno para evitar que el contenido se pegue a los bordes */
+    box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
 }
 
 /* Título principal */
 h1 {
-    font-size: 36px;
+    font-size: 2.5rem; /* Escalable para pantallas pequeñas */
     font-weight: bold;
     color: #FFFFFF;
     margin: 0;
     text-transform: uppercase;
     text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
+    word-wrap: break-word; /* Forzar el salto de línea si el texto es muy largo */
 }
 
 /* Input del formulario */
@@ -56,9 +59,11 @@ form .form-control {
     border: 2px solid #FFFFFF;
     border-radius: 5px;
     padding: 10px;
-    font-size: 16px;
+    font-size: 1rem; /* Relativo a las pantallas */
     text-align: center;
     transition: border-color 0.3s ease;
+    width: 100%; /* Adaptar el tamaño al contenedor */
+    box-sizing: border-box; /* Incluir padding y borde */
 }
 
 form .form-control:focus {
@@ -76,7 +81,7 @@ form .form-control:focus::placeholder {
 
 /* Botón de envío */
 form button[type="submit"] {
-    font-size: 15px;
+    font-size: 1rem; /* Relativo a la pantalla */
     color: #FFFFFF;
     background: #000000;
     border: 2px solid #FFFFFF;
@@ -87,6 +92,8 @@ form button[type="submit"] {
     cursor: pointer;
     max-width: 160px;
     margin: 20px auto 0;
+    width: 100%; /* Adaptar al tamaño del contenedor */
+    box-sizing: border-box;
 }
 
 form button[type="submit"]:hover {
@@ -98,7 +105,7 @@ form button[type="submit"]:hover {
 
 /* Mensajes de error */
 #error {
-    font-size: 20px;
+    font-size: 1.25rem; /* Escalable */
     color: #ff4d4d;
     text-align: center;
 }
@@ -113,13 +120,54 @@ form button[type="submit"]:hover {
 }
 
 #sessionInfo h3 {
-    font-size: 24px;
+    font-size: 1.5rem; /* Escalable */
     font-weight: bold;
     color: #FFFFFF;
 }
 
 #sessionInfo p {
-    font-size: 16px;
+    font-size: 1rem; /* Escalable */
     color: #FFFFFF;
     margin: 5px 0;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem; /* Reducir tamaño del título en pantallas pequeñas */
+    }
+
+    .form-control, button[type="submit"] {
+        font-size: 0.9rem; /* Ajustar el tamaño de texto */
+    }
+
+    #sessionInfo {
+        padding: 15px; /* Reducir espacio interno */
+    }
+
+    #sessionInfo h3 {
+        font-size: 1.25rem; /* Reducir título */
+    }
+
+    #sessionInfo p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.75rem; /* Aún más pequeño en pantallas muy pequeñas */
+    }
+
+    .form-control, button[type="submit"] {
+        font-size: 0.8rem; /* Ajustar aún más */
+    }
+
+    #sessionInfo h3 {
+        font-size: 1rem; /* Más pequeño */
+    }
+
+    #sessionInfo p {
+        font-size: 0.8rem;
+    }
 }

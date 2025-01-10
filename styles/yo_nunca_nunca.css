@@ -51,7 +51,7 @@ body {
 
 
 /* Botones */
-#nextQuestionButton, #logoutButton, #showResultsButton {
+#nextQuestionButton, #logoutButton, #showResultsButton, #lobbyButton {
     font-size: 15px; /* Tamaño de texto más grande */
     color: #FFFFFF;
     background: #000000;
@@ -67,7 +67,7 @@ body {
     margin-top: 30px; /* Más espacio respecto al formulario */
 }
 
-#nextQuestionButton:hover, #logoutButton:hover, #showResultsButton:hover {
+#nextQuestionButton:hover, #logoutButton:hover, #showResultsButton:hover, #lobbyButton:hover {
     background: #bb00ff; /* Cambiar fondo al morado */
     color: #FFFFFF !important;
     border-color: #bb00ff; /* Cambiar borde al morado */
@@ -132,7 +132,7 @@ body {
         font-size: 1.2rem; /* Reducir tamaño del texto de las secciones */
     }
 
-    #showResultsButton, #nextQuestionButton, #logoutButton, #userButtons {
+    #showResultsButton, #nextQuestionButton, #logoutButton, #userButtons, #lobbyButton {
         font-size: 1rem; /* Tamaño del texto más pequeño */
         padding: 10px 20px; /* Reducir el padding */
         max-width: 150px; /* Reducir el ancho máximo */

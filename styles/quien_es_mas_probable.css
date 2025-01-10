@@ -32,7 +32,7 @@ body {
     border: 5px solid #bb00ff;
     max-width: 50vw;
     width: 100%;
-    max-height: 70%;
+    max-height: 70%; /* Controlar altura máxima */
     margin: 20px auto;
     display: flex;
     flex-direction: column;
@@ -73,7 +73,7 @@ body {
 }
 
 /* Botones comunes */
-#nextQuestionButton, #logoutButton, #showResultsButton, .btn-general {
+#nextQuestionButton, #logoutButton, #showResultsButton, .btn-general, #lobbyButton {
     font-size: 14px; /* Tamaño ajustado */
     color: #FFFFFF;
     background: #000000;
@@ -91,7 +91,7 @@ body {
 }
 
 /* Efecto hover para botones */
-#nextQuestionButton:hover, #logoutButton:hover, #showResultsButton:hover, .btn-general:hover {
+#nextQuestionButton:hover, #logoutButton:hover, #showResultsButton:hover, .btn-general:hover , #lobbyButton:hover {
     background: #bb00ff;
     border-color: #bb00ff;
     transform: scale(1.05);
@@ -165,7 +165,7 @@ body {
         font-size: 1.4rem;
     }
 
-    #nextQuestionButton, #logoutButton, #showResultsButton, .btn-general {
+    #nextQuestionButton, #logoutButton, #showResultsButton, .btn-general, #lobbyButton {
         font-size: 13px;
         padding: 10px 15px;
         max-width: 160px;
@@ -192,7 +192,7 @@ body {
         font-size: 1.2rem;
     }
 
-    #nextQuestionButton, #logoutButton, #showResultsButton, .btn-general {
+    #nextQuestionButton, #logoutButton, #showResultsButton, .btn-general, #lobbyButton {
         font-size: 12px;
         padding: 8px 12px;
         max-width: 140px;

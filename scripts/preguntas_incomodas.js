@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (parsedMessage.event === "nextQuestion") {
                 const { question, toUser } = parsedMessage;
                 updateUI(question, toUser);
+            } else if (parsedMessage.event === "returnToLobby") {
+                redirectToLobby(parsedMessage.isCreator);
             }
         });
 
@@ -26,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById("logoutButton").addEventListener("click", logoutUser);
     document.getElementById("nextQuestionButton").addEventListener("click", fetchNextQuestion);
+    document.getElementById("lobbyButton").addEventListener("click", returnToLobby);
 
     function updateUI(question, toUser) {
         const questionContainer = document.getElementById("preguntas");
@@ -34,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
             <p class="card-text display-5" id="questionText">${question}</p>
         `;
     }
-    
 
     function fetchNextQuestion() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-preguntas-incomodas?tipo=all`)
@@ -65,12 +67,31 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 const isCreator = data.creator === username;
                 document.getElementById("nextQuestionButton").style.display = isCreator ? "block" : "none";
+                document.getElementById("lobbyButton").style.display = isCreator ? "block" : "none";
 
                 if (isCreator) {
                     fetchNextQuestion();
                 }
             })
             .catch(error => console.error("Error al obtener detalles de la sesión:", error));
+    }
+
+    function returnToLobby() {
+        // Enviar evento para redirigir a todos los usuarios
+        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+            event: "returnToLobby",
+            isCreator: true
+        }));
+
+        // Redirigir al lobby como creador
+        redirectToLobby(true);
+    }
+
+    function redirectToLobby(isCreator) {
+        const url = isCreator
+            ? `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}&role=creator`
+            : `/pages/sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
+        window.location.href = url;
     }
 
     function logoutUser() {
