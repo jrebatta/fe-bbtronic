@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById("joinSessionForm");
     const submitButton = document.querySelector(".btn-submit");
     const errorElement = document.getElementById("error");
+    const loadingSpinner = document.getElementById("loadingSpinner");
 
     // Limpia la URL para evitar cadenas de consulta
     const cleanUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
@@ -22,8 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // Deshabilitar el botón para evitar múltiples envíos
+            // Mostrar spinner y deshabilitar botón
+            loadingSpinner.style.display = "flex";
             submitButton.disabled = true;
+            errorElement.textContent = "";
 
             const response = await fetch(`${API_BASE_URL}/api/game-sessions/join`, {
                 method: "POST",
@@ -48,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
             errorElement.textContent = error.message;
             console.error("Error:", error.message);
         } finally {
-            // Rehabilitar el botón
+            // Ocultar spinner y habilitar botón
+            loadingSpinner.style.display = "none";
             submitButton.disabled = false;
         }
     });

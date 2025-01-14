@@ -29,6 +29,8 @@
                 >
             </div>
             <button type="submit" class="btn btn-primary w-100">Crear</button>
+            <br>
+            <br>
             <div id="error" class="text-danger mt-3"></div>
         </form>
         
@@ -38,6 +40,11 @@
             <p><strong>Token de Sesión:</strong> <span id="displayToken"></span></p>
             <p><strong>Código de Sesión:</strong> <span id="displayCode"></span></p>
         </div>
+    </div>
+
+    <!-- Spinner de carga -->
+    <div id="loadingSpinner" style="display: none;">
+        <div class="spinner"></div>
     </div>
 
     <script type="module" src="../scripts/crear_sesion.js"></script>
