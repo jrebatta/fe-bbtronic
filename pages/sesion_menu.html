@@ -28,14 +28,24 @@
                 <button id="yoNuncaNunca" class="btn btn-primary" style="display: none;">Yo Nunca Nunca</button>
                 <button id="quienEsMasProbable" class="btn btn-primary" style="display: none;">Quien Es Más Probable</button>
                 <button id="culturaPendeja" class="btn btn-primary" style="display: none;">Cultura Pendeja</button>
+                <button id="kickButton" class="btn btn-danger" style="display: none;">Expulsar de la Sesión</button>
                 <button id="logoutButton" class="btn btn-danger">Salir de la Sesión</button>
                 <div id="error" class="text-danger"></div>
             </div>            
         </div>
     </div>
 
-    <script type="module" src="../scripts/sesion_menu.js"></script>
+    <!-- Modal para elegir usuario a expulsar -->
+    <div id="kickModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Seleccionar Usuario para Expulsar</h2>
+            <ul id="kickUserList" class="list-group"></ul>
+        </div>
+    </div>
+
     <script defer src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script type="module" src="../scripts/sesion_menu.js"></script>
 </body>
 </html>

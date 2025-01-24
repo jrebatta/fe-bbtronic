@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const username = urlParams.get('username');
 
     // Eliminar la cadena de consulta de la URL
-    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    const cleanUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     window.history.replaceState({}, document.title, cleanUrl);
 
     const sessionToken = sessionStorage.getItem("sessionToken");
@@ -29,45 +29,51 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const parsedMessage = JSON.parse(message.body);
 
-                // Manejar el evento de inicio del juego general
-                if (parsedMessage.event === "gameStarted") {
-                console.log("Juego iniciado, redirigiendo...");
-                window.location.href = `preguntas_directas.html?sessionCode=${sessionCode}&username=${username}`;
-        }
-
-                if (parsedMessage.event === "yoNuncaNuncaStarted") {
-                    console.log("Yo Nunca Nunca iniciado, redirigiendo...");
-                    window.location.href = `yo_nunca_nunca.html?sessionCode=${sessionCode}&username=${username}`;
-                }
-                if (parsedMessage.event === "preguntasIncomodasStarted") {
-                    console.log("Preguntas Incomodas iniciado, redirigiendo...");
-                    window.location.href = `preguntas_incomodas.html?sessionCode=${sessionCode}&username=${username}`;
-                }
-
-                if (parsedMessage.event === "quienEsMasProbableStarted") {
-                    console.log("Quien Es Más Probable iniciado, redirigiendo...");
-                    window.location.href = `quien_es_mas_probable.html?sessionCode=${sessionCode}&username=${username}`;
-                }
-
-                if (parsedMessage.event === "culturaPendejaStarted") {
-                    console.log("Cultura Pendeja iniciado, redirigiendo...");
-                    window.location.href = `cultura_pendeja.html?sessionCode=${sessionCode}&username=${username}`;
-                }
-                
-                if (parsedMessage.event === "userUpdate" && Array.isArray(parsedMessage.users)) {
-                    console.log("Lista de usuarios actualizada:", parsedMessage.users);
-                    updateUserList(parsedMessage.users); // Actualiza usuarios al recibir el evento
-                }
-
-                if (parsedMessage.event === "userLeft" && parsedMessage.username) {
-                    console.log(`Usuario ${parsedMessage.username} salió de la sesión.`);
-                    removeUserFromList(parsedMessage.username); // Elimina solo al usuario que salió
+                switch (parsedMessage.event) {
+                    case "gameStarted":
+                        console.log("Juego iniciado, redirigiendo...");
+                        window.location.href = `preguntas_directas.html?sessionCode=${sessionCode}&username=${username}`;
+                        break;
+                    case "yoNuncaNuncaStarted":
+                        console.log("Yo Nunca Nunca iniciado, redirigiendo...");
+                        window.location.href = `yo_nunca_nunca.html?sessionCode=${sessionCode}&username=${username}`;
+                        break;
+                    case "preguntasIncomodasStarted":
+                        console.log("Preguntas Incomodas iniciado, redirigiendo...");
+                        window.location.href = `preguntas_incomodas.html?sessionCode=${sessionCode}&username=${username}`;
+                        break;
+                    case "quienEsMasProbableStarted":
+                        console.log("Quien Es Más Probable iniciado, redirigiendo...");
+                        window.location.href = `quien_es_mas_probable.html?sessionCode=${sessionCode}&username=${username}`;
+                        break;
+                    case "culturaPendejaStarted":
+                        console.log("Cultura Pendeja iniciado, redirigiendo...");
+                        window.location.href = `cultura_pendeja.html?sessionCode=${sessionCode}&username=${username}`;
+                        break;
+                    case "userUpdate":
+                        if (Array.isArray(parsedMessage.users)) {
+                            console.log("Lista de usuarios actualizada:", parsedMessage.users);
+                            updateUserList(parsedMessage.users);
+                        }
+                        break;
+                    case "userLeft":
+                        if (parsedMessage.username) {
+                            console.log(`Usuario ${parsedMessage.username} salió de la sesión.`);
+                            removeUserFromList(parsedMessage.username);
+                        }
+                        break;
+                    case "sessionEnded":
+                        console.log("Sesión terminada, redirigiendo...");
+                        sessionStorage.clear();
+                        window.location.href = "index.html";
+                        break;
+                    default:
+                        console.error("Evento desconocido:", parsedMessage.event);
                 }
             } catch (error) {
                 console.error("Error al procesar el mensaje del WebSocket:", error);
             }
         });
-
     }, function (error) {
         console.error("Error en la conexión del WebSocket:", error);
         document.getElementById("error").textContent = "No se pudo conectar al servidor. Intenta recargar la página.";
@@ -80,23 +86,25 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("preguntasIncomodas"),
             document.getElementById("yoNuncaNunca"),
             document.getElementById("quienEsMasProbable"),
-            document.getElementById("culturaPendeja")
+            document.getElementById("culturaPendeja"),
+            document.getElementById("kickButton")
         ];
 
         buttons.forEach(button => {
-            button.style.display = isCreator ? "block" : "none";
+            if (button) {
+                button.style.display = isCreator ? "block" : "none";
+            }
         });
 
         if (isCreator) {
-            document.getElementById("startGameButton").addEventListener("click", startGame); // Reasigna funcionalidad
-            document.getElementById("preguntasIncomodas").addEventListener("click", startPreguntasIncomodas); // Reasigna funcionalidad
-            document.getElementById("yoNuncaNunca").addEventListener("click", startYoNuncaNunca); // Añadido para Yo Nunca Nunca
+            document.getElementById("startGameButton").addEventListener("click", startGame);
+            document.getElementById("preguntasIncomodas").addEventListener("click", startPreguntasIncomodas);
+            document.getElementById("yoNuncaNunca").addEventListener("click", startYoNuncaNunca);
             document.getElementById("quienEsMasProbable").addEventListener("click", startQuienEsMasProbable);
-            document.getElementById("culturaPendeja").addEventListener("click", startCulturaPendeja); // Añadido para Yo Nunca Nunca
-
+            document.getElementById("culturaPendeja").addEventListener("click", startCulturaPendeja);
+            document.getElementById("kickButton").addEventListener("click", showKickModal);
         }
     }
-
 
     // Función para iniciar el juego "Preguntas Directas"
     function startGame() {
@@ -113,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => console.error("Error al iniciar el juego:", error));
     }
-    
 
     function startYoNuncaNunca() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/yo-nunca-nunca/start`, {
@@ -130,20 +137,19 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
     }
 
-    function startPreguntasIncomodas(){
+    function startPreguntasIncomodas() {
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/start-preguntas-incomodas`, {
             method: "POST"
         })
             .then(response => {
                 if (response.ok) {
-                    console.log("Preguntas incomodas iniciado. Enviando evento a través del WebSocket.");
+                    console.log("Preguntas incómodas iniciado. Enviando evento a través del WebSocket.");
                     stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "preguntasIncomodasStarted" }));
                 } else {
-                    throw new Error("Error al iniciar Quien Es Más Probable.");
+                    throw new Error("Error al iniciar Preguntas Incómodas.");
                 }
             })
-            .catch(error => console.error("Error al iniciar Quien Es Más Probable:", error));
-
+            .catch(error => console.error("Error al iniciar Preguntas Incómodas:", error));
     }
 
     function startQuienEsMasProbable() {
@@ -152,56 +158,55 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (response.ok) {
-                    console.log("Quien Es Más Probable iniciado. Enviando evento a través del WebSocket.");
+                    console.log("Quién Es Más Probable iniciado. Enviando evento a través del WebSocket.");
                     stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "quienEsMasProbableStarted" }));
                 } else {
-                    throw new Error("Error al iniciar Quien Es Más Probable.");
+                    throw new Error("Error al iniciar Quién Es Más Probable.");
                 }
             })
-            .catch(error => console.error("Error al iniciar Quien Es Más Probable:", error));
+            .catch(error => console.error("Error al iniciar Quién Es Más Probable:", error));
     }
 
-        // Función para iniciar "Cultura Pendeja"
-        function startCulturaPendeja() {
-            fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/cultura-pendeja/start`, {
-                method: "POST"
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log("Cultura Pendeja iniciada. Enviando evento a través del WebSocket.");
-                        stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "culturaPendejaStarted" }));
-                    } else {
-                        throw new Error("Error al iniciar Yo Nunca Nunca.");
-                    }
-                })
-                .catch(error => console.error("Error al iniciar Yo Nunca Nunca:", error));
-        }
-    
-
-    // Botón para salir de la sesión
-    document.getElementById("logoutButton").addEventListener("click", function () {
-        fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
-            method: "DELETE"
+    function startCulturaPendeja() {
+        fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/cultura-pendeja/start`, {
+            method: "POST"
         })
-            .then(response => response.text())
-            .then(message => {
-                if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
-                    console.log("Sesión cerrada correctamente.");
-
-                    // Notificar al servidor que el usuario salió
-                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
-                        event: "userLeft",
-                        username: username
-                    }));
-
-                    sessionStorage.removeItem("sessionToken");
-                    sessionStorage.removeItem("username");
-                    window.location.href = "/index.html";
+            .then(response => {
+                if (response.ok) {
+                    console.log("Cultura Pendeja iniciada. Enviando evento a través del WebSocket.");
+                    stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({ event: "culturaPendejaStarted" }));
                 } else {
-                    alert("Error al cerrar sesión.");
+                    throw new Error("Error al iniciar Cultura Pendeja.");
                 }
             })
-            .catch(error => console.error("Error cerrando sesión:", error));
+            .catch(error => console.error("Error al iniciar Cultura Pendeja:", error));
+    }
+
+    // Botón para salir de la sesión
+    document.getElementById("logoutButton").addEventListener("click", async function () {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
+                method: "DELETE"
+            });
+
+            const message = await response.text();
+            if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
+                console.log("Sesión cerrada correctamente.");
+
+                // Notificar al servidor que el usuario salió
+                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+                    event: "userLeft",
+                    username: username
+                }));
+
+                sessionStorage.clear();
+                window.location.href = "/index.html";
+            } else {
+                alert("Error al cerrar sesión.");
+            }
+        } catch (error) {
+            console.error("Error cerrando sesión:", error);
+        }
     });
 
     // Cargar usuarios al inicializar
@@ -219,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Mostrar botones solo si el usuario es el creador
                 setupButtonsForCreator(data.creator === username);
 
-                updateUserList(data.users); // Actualiza la lista de usuarios iniciales
+                updateUserList(data.users);
             })
             .catch(error => {
                 console.error("Error al cargar usuarios iniciales:", error);
@@ -240,10 +245,57 @@ document.addEventListener('DOMContentLoaded', function () {
         users.forEach(user => {
             const li = document.createElement("li");
             li.classList.add("list-group-item"); // Clase para el estilo individual
-            li.textContent = `${user.username} ${user.ready ? '(Listo)' : ''}`; // Texto con estado
             li.id = `user-${user.username}`; // Asigna un ID único basado en el nombre de usuario
+
+            const usernameSpan = document.createElement("span");
+            usernameSpan.textContent = `${user.username} ${user.ready ? '(Listo)' : ''}`; // Texto con estado
+
+            li.appendChild(usernameSpan);
+
             userList.appendChild(li); // Agregar al contenedor de lista
         });
+    }
+
+    // Mostrar modal para elegir usuario a expulsar
+    function showKickModal() {
+        const kickModal = document.getElementById("kickModal");
+        const kickUserList = document.getElementById("kickUserList");
+        kickUserList.innerHTML = ""; // Limpia la lista actual
+
+        const userList = document.getElementById("userList");
+        const users = userList.getElementsByTagName("li");
+
+        for (let user of users) {
+            if (user.id !== `user-${username}`) {
+                const li = document.createElement("li");
+                li.classList.add("list-group-item");
+                li.textContent = user.textContent.trim();
+                li.addEventListener("click", () => {
+                    const confirmKick = confirm(`¿Deseas expulsar a ${user.textContent.trim()} de la sesión?`);
+                    if (confirmKick) {
+                        const sessionToken = user.id.split('-')[1];
+                        kickUser(sessionToken, user.textContent.trim());
+                        kickModal.style.display = "none";
+                    }
+                });
+                kickUserList.appendChild(li);
+            }
+        }
+
+        kickModal.style.display = "block";
+
+        // Cerrar el modal cuando se hace clic en la "x"
+        const closeModal = document.getElementsByClassName("close")[0];
+        closeModal.onclick = function() {
+            kickModal.style.display = "none";
+        }
+
+        // Cerrar el modal cuando se hace clic fuera del modal
+        window.onclick = function(event) {
+            if (event.target == kickModal) {
+                kickModal.style.display = "none";
+            }
+        }
     }
 
     // Eliminar un usuario específico de la lista
@@ -253,6 +305,32 @@ document.addEventListener('DOMContentLoaded', function () {
             userItem.remove();
         } else {
             console.error(`Usuario ${username} no encontrado en la lista.`);
+        }
+    }
+
+    // Función para expulsar a un usuario
+    async function kickUser(sessionToken, username) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/users/logout?sessionToken=${sessionToken}`, {
+                method: "DELETE"
+            });
+
+            const message = await response.text();
+            if (message.includes("Sesión cerrada") || message.includes("Usuario no encontrado")) {
+                console.log(`Usuario ${username} expulsado correctamente.`);
+
+                // Notificar al servidor que el usuario fue expulsado
+                stompClient.send(`/topic/${sessionCode}`, {}, JSON.stringify({
+                    event: "userLeft",
+                    username: username
+                }));
+
+                removeUserFromList(username);
+            } else {
+                alert("Error al expulsar usuario.");
+            }
+        } catch (error) {
+            console.error(`Error expulsando al usuario ${username}:`, error);
         }
     }
 

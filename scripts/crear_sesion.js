@@ -21,33 +21,33 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.disabled = true;
             errorElement.textContent = "";
 
-            // Simular múltiples operaciones de carga
-            const responses = await Promise.all([
-                fetch(`${API_BASE_URL}/api/game-sessions/create?username=${username}`, { method: "POST" }),
-                // Aquí puedes agregar otras llamadas a API o promesas necesarias
-                new Promise(resolve => setTimeout(resolve, 1000)) // Ejemplo: simula una espera
-            ]);
+            // Llamada a la función para crear la sesión
+            const sessionData = await createSession(username);
 
-            const [sessionResponse] = responses;
+            // Guardar el token de sesión y el nombre de usuario en sessionStorage
+            sessionStorage.setItem("sessionToken", sessionData.sessionToken);
+            sessionStorage.setItem("username", username);
 
-            if (!sessionResponse.ok) {
-                const errorData = await sessionResponse.json();
-                throw new Error(errorData.error);
-            }
+            // Redirigir a sesion_menu.html con los parámetros necesarios
+            window.location.href = `sesion_menu.html?sessionCode=${sessionData.sessionCode}&username=${username}`;
 
-            const data = await sessionResponse.json();
-            sessionStorage.setItem("sessionToken", data.sessionToken);
-            sessionStorage.setItem("username", data.username);
-
-            // Redirigir después de la carga completa
-            window.location.href = `sesion_menu.html?sessionCode=${data.sessionCode}&username=${username}`;
         } catch (error) {
             errorElement.textContent = error.message;
-            console.error("Error:", error.message);
         } finally {
             // Ocultar el spinner y habilitar el botón
             loadingSpinner.style.display = "none";
             submitButton.disabled = false;
         }
     });
+
+    async function createSession(username) {
+        const response = await fetch(`${API_BASE_URL}/api/game-sessions/create?username=${username}`, { method: "POST" });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error);
+        }
+
+        return response.json();
+    }
 });

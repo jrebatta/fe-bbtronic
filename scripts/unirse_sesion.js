@@ -18,42 +18,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validar inputs
         if (!sessionCode || !username) {
-            errorElement.textContent = "Por favor, completa todos los campos.";
+            errorElement.textContent = "El código de sesión y el nombre de usuario son obligatorios.";
             return;
         }
 
         try {
-            // Mostrar spinner y deshabilitar botón
+            // Mostrar el spinner y deshabilitar el botón
             loadingSpinner.style.display = "flex";
             submitButton.disabled = true;
             errorElement.textContent = "";
 
-            const response = await fetch(`${API_BASE_URL}/api/game-sessions/join`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ sessionCode, username })
-            });
+            // Llamada a la función para unirse a la sesión
+            const sessionData = await joinSession(sessionCode, username);
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Error al unirse a la sesión.");
-            }
-
-            const data = await response.json();
-            sessionStorage.setItem("sessionToken", data.sessionToken);
+            // Guardar el token de sesión y el nombre de usuario en sessionStorage
+            sessionStorage.setItem("sessionToken", sessionData.sessionToken);
             sessionStorage.setItem("username", username);
 
-            // Redirigir al menú de sesión
+            // Redirigir a sesion_menu.html con los parámetros necesarios
             window.location.href = `sesion_menu.html?sessionCode=${sessionCode}&username=${username}`;
+
         } catch (error) {
             errorElement.textContent = error.message;
-            console.error("Error:", error.message);
         } finally {
-            // Ocultar spinner y habilitar botón
+            // Ocultar el spinner y habilitar el botón
             loadingSpinner.style.display = "none";
             submitButton.disabled = false;
         }
     });
+
+    async function joinSession(sessionCode, username) {
+        const response = await fetch(`${API_BASE_URL}/api/game-sessions/join`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ sessionCode, username })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error);
+        }
+
+        return response.json();
+    }
 });
