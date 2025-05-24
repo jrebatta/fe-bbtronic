@@ -81,30 +81,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mostrar botones solo para el creador de la sesión
     function setupButtonsForCreator(isCreator) {
-        const buttons = [
-            document.getElementById("startGameButton"),
-            document.getElementById("preguntasIncomodas"),
-            document.getElementById("yoNuncaNunca"),
-            document.getElementById("quienEsMasProbable"),
-            document.getElementById("culturaPendeja"),
-            document.getElementById("kickButton")
-        ];
+    const buttonIds = [
+        "startGameButton",
+        "preguntasIncomodas",
+        "yoNuncaNunca",
+        "quienEsMasProbable",
+        "culturaPendeja",
+        "kickButton"
+    ];
 
-        buttons.forEach(button => {
-            if (button) {
-                button.style.display = isCreator ? "block" : "none";
-            }
-        });
-
-        if (isCreator) {
-            document.getElementById("startGameButton").addEventListener("click", startGame);
-            document.getElementById("preguntasIncomodas").addEventListener("click", startPreguntasIncomodas);
-            document.getElementById("yoNuncaNunca").addEventListener("click", startYoNuncaNunca);
-            document.getElementById("quienEsMasProbable").addEventListener("click", startQuienEsMasProbable);
-            document.getElementById("culturaPendeja").addEventListener("click", startCulturaPendeja);
-            document.getElementById("kickButton").addEventListener("click", showKickModal);
+    // Mostrar u ocultar botones según sea creador
+    buttonIds.forEach(id => {
+        const button = document.getElementById(id);
+        if (button) {
+            button.style.display = isCreator ? "block" : "none";
         }
+    });
+
+    if (isCreator) {
+        const startBtn = document.getElementById("startGameButton");
+        if (startBtn) startBtn.addEventListener("click", startGame);
+
+        const preguntasBtn = document.getElementById("preguntasIncomodas");
+        if (preguntasBtn) preguntasBtn.addEventListener("click", startPreguntasIncomodas);
+
+        const nuncaBtn = document.getElementById("yoNuncaNunca");
+        if (nuncaBtn) nuncaBtn.addEventListener("click", startYoNuncaNunca);
+
+        const probableBtn = document.getElementById("quienEsMasProbable");
+        if (probableBtn) probableBtn.addEventListener("click", startQuienEsMasProbable);
+
+        const culturaBtn = document.getElementById("culturaPendeja");
+        if (culturaBtn) culturaBtn.addEventListener("click", startCulturaPendeja);
+
+        const kickBtn = document.getElementById("kickButton");
+        if (kickBtn) kickBtn.addEventListener("click", showKickModal);
     }
+}
 
     // Función para iniciar el juego "Preguntas Directas"
     function startGame() {
