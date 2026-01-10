@@ -5,10 +5,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     color: #FFFFFF;
-    overflow: auto; /* Permite desplazamiento si el contenido excede la pantalla */
-    background-color: #121212;
+    overflow: auto;
+    background: linear-gradient(135deg, #0a0015 0%, #1a0033 50%, #2d0052 100%);
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 /* Video de fondo */
@@ -20,114 +22,171 @@ body {
     height: 100%;
     object-fit: cover;
     z-index: -1;
+    opacity: 0.7;
 }
 
 /* Contenedor de preguntas */
 #preguntas {
-    background-color: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
     color: white;
-    border-radius: 30px;
-    padding: 30px;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
-    border: 7px solid #bb00ff;
-    max-width: 50vw;
+    border-radius: 20px;
+    padding: 25px 20px;
+    box-shadow: 0 12px 50px rgba(187, 0, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 3px solid #bb00ff;
+    max-width: 95%;
     width: 100%;
-    margin: 20px auto;
-    overflow-y: auto; /* Permite el desplazamiento si el contenido es largo */
+    margin: 10px auto;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
-    font-weight: bold;
-    line-height: 1.8;
-    text-shadow: 0 0 15px #bb00ff, 0 0 30px #bb00ff, 0 0 50px #bb00ff, 0 0 70px #bb00ff;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-shadow: 0 0 20px rgba(187, 0, 255, 0.9),
+                 0 0 40px rgba(187, 0, 255, 0.6),
+                 0 0 60px rgba(187, 0, 255, 0.3);
+    animation: cardGlow 3s ease-in-out infinite;
+    text-align: center;
+}
+
+@keyframes cardGlow {
+    0%, 100% { 
+        box-shadow: 0 12px 50px rgba(187, 0, 255, 0.5);
+        border-color: #bb00ff;
+    }
+    50% { 
+        box-shadow: 0 15px 60px rgba(187, 0, 255, 0.7), 0 0 80px rgba(187, 0, 255, 0.4);
+        border-color: #ff00ff;
+    }
 }
 
 /* Texto del usuario */
 #toUserText {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #ffffff;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     text-align: center;
+    text-shadow: 0 0 15px rgba(187, 0, 255, 0.7);
+    word-wrap: break-word;
 }
 
 /* Botones */
 #nextQuestionButton, #logoutButton, #lobbyButton {
-    font-size: 15px;
+    font-size: 1rem;
+    font-weight: 600;
     color: #FFFFFF;
-    background: #000000;
-    border: 2px solid #FFFFFF;
-    border-radius: 9px;
-    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.3) 0%, rgba(80, 0, 180, 0.3) 100%);
+    border: 2px solid #bb00ff;
+    border-radius: 12px;
+    padding: 16px 28px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    max-width: 200px;
-    margin-top: 30px;
+    width: 100%;
+    max-width: 280px;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(187, 0, 255, 0.3);
+    text-shadow: 0 0 10px rgba(187, 0, 255, 0.6);
+    /* Mejoras para táctil */
+    -webkit-tap-highlight-color: rgba(187, 0, 255, 0.3);
+    touch-action: manipulation;
+    user-select: none;
 }
 
 #nextQuestionButton:hover, #logoutButton:hover, #lobbyButton:hover {
-    background: #bb00ff;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.5) 0%, rgba(80, 0, 180, 0.5) 100%);
     color: #FFFFFF !important;
-    border-color: #bb00ff;
-    transform: scale(1.05);
-    text-shadow: 0 0 5px #FFFFFF, 0 0 20px #FFFFFF;
+    border-color: #ff00ff;
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(187, 0, 255, 0.6),
+                0 0 40px rgba(187, 0, 255, 0.4);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1),
+                 0 0 30px rgba(187, 0, 255, 1);
+}
+
+#nextQuestionButton:active, #logoutButton:active, #lobbyButton:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 /* Etiqueta del usuario */
 .to-user-label {
     display: block;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #ffffff;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     text-align: center;
-    font-weight: bold;
-    text-shadow: 0 0 1px #FFFFFF, 0 0 1px #ffffff;
+    font-weight: 700;
+    text-shadow: 0 0 15px rgba(187, 0, 255, 0.7),
+                 0 0 30px rgba(187, 0, 255, 0.4);
+    word-wrap: break-word;
 }
 
 /* Ajustes responsivos */
-@media (max-width: 768px) {
+@media (min-width: 481px) and (max-width: 768px) {
     #preguntas {
-        max-width: 90%; /* Reducir ancho en tablets */
-        padding: 20px;
-        font-size: 2rem; /* Reducir tamaño de fuente */
-        border-radius: 20px;
+        max-width: 90%;
+        padding: 30px 25px;
+        font-size: 1.9rem;
+        border-radius: 25px;
     }
 
     #toUserText {
-        font-size: 1.3rem; /* Reducir tamaño del texto del usuario */
+        font-size: 1.4rem;
     }
 
     .to-user-label {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
 
     #nextQuestionButton, #logoutButton, #lobbyButton {
-        font-size: 14px; /* Reducir tamaño del texto de los botones */
-        padding: 8px 15px;
+        font-size: 1.1rem;
+        padding: 18px 32px;
+        max-width: 300px;
     }
 }
 
-@media (max-width: 480px) {
+@media (min-width: 769px) {
     #preguntas {
-        max-width: 100%; /* Usar todo el ancho en móviles */
-        padding: 15px;
-        font-size: 1.5rem; /* Reducir más el tamaño de fuente */
-        border-radius: 15px;
+        max-width: 700px;
+        padding: 40px 35px;
+        font-size: 2.2rem;
+        border-radius: 30px;
     }
 
     #toUserText {
-        font-size: 1.1rem; /* Ajustar tamaño del texto del usuario */
+        font-size: 1.6rem;
     }
 
     .to-user-label {
-        font-size: 1.1rem;
+        font-size: 1.6rem;
     }
 
     #nextQuestionButton, #logoutButton, #lobbyButton {
-        font-size: 12px; /* Tamaño más pequeño para botones */
-        padding: 6px 12px;
-        max-width: 150px; /* Reducir el ancho máximo */
+        font-size: 1.2rem;
+        padding: 18px 35px;
+        max-width: 320px;
+    }
+}
+
+/* Mejoras adicionales para móvil */
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    
+    #preguntas {
+        margin: 5px auto;
+        min-height: auto;
+    }
+
+    /* Asegurar que los botones sean fáciles de tocar */
+    #nextQuestionButton, #logoutButton, #lobbyButton {
+        min-height: 48px;
+        margin-top: 15px;
     }
 }

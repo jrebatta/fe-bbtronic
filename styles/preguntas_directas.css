@@ -7,9 +7,9 @@ body {
     align-items: center;
     min-height: 100vh;
     color: #FFFFFF;
-    overflow: auto; /* Permite desplazamiento si el contenido excede la pantalla */
-    background-color: #121212;
-    box-sizing: border-box; /* Incluye padding y bordes en el tamaño total */
+    overflow: auto;
+    background: linear-gradient(135deg, #0a0015 0%, #1a0033 50%, #2d0052 100%);
+    box-sizing: border-box;
 }
 
 /* Video de fondo */
@@ -21,6 +21,7 @@ body {
     height: 100%;
     object-fit: cover;
     z-index: -1;
+    opacity: 0.7;
 }
 
 /* Contenedor principal */
@@ -32,32 +33,36 @@ body {
     justify-content: center;
     align-items: center;
     gap: 30px;
-    padding: 20px;
+    padding: 30px;
     width: 90%;
-    max-width: 800px;
+    max-width: 850px;
     margin: 20px auto;
 }
 
 /* Título principal */
 h2 {
-    font-size: 32px;
-    font-weight: bold;
+    font-size: 2.2rem;
+    font-weight: 700;
     color: #FFFFFF;
     margin: 0 0 20px;
     text-transform: uppercase;
-    text-shadow: 0 0 5px #FFFFFF, 0 0 15px #FFFFFF;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(187, 0, 255, 0.8),
+                 0 0 40px rgba(187, 0, 255, 0.5);
 }
 
 /* Contenedor de preguntas */
 #questionsContainer {
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(187, 0, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(187, 0, 255, 0.2);
     width: 100%;
-    max-width: 700px;
+    max-width: 750px;
     min-height: 300px;
-    overflow-y: auto; /* Habilita scroll dentro del contenedor si es necesario */
+    overflow-y: auto;
     box-sizing: border-box;
 }
 
@@ -69,46 +74,59 @@ h2 {
 
 /* Etiqueta para "Pregunta para..." */
 .question-item label {
-    font-size: 18px;
+    font-size: 1.2rem;
     color: #FFFFFF;
+    font-weight: 600;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(187, 0, 255, 0.6);
 }
 
 /* Input para preguntas */
 .question-item input[type="text"] {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.6);
     color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-    border-radius: 10px;
-    padding: 12px 15px;
-    font-size: 16px;
+    border: 2px solid rgba(187, 0, 255, 0.5);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1.05rem;
     width: 100%;
     box-sizing: border-box;
     text-align: center;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .question-item input[type="text"]:focus {
     border-color: #bb00ff;
     outline: none;
-    box-shadow: 0 0 10px #bb00ff;
+    box-shadow: 0 0 20px rgba(187, 0, 255, 0.6),
+                inset 0 2px 5px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.question-item input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 /* Checkbox de anonimato */
 .form-check {
-    margin-top: 15px;
+    margin-top: 18px;
     text-align: center;
 }
 
 .form-check-input {
     accent-color: #bb00ff;
-    transform: scale(1.3);
+    transform: scale(1.4);
+    cursor: pointer;
 }
 
 .form-check-label {
     color: #FFFFFF;
-    font-size: 16px;
+    font-size: 1.05rem;
+    cursor: pointer;
+    margin-left: 8px;
 }
 
 /* Contenedor de los botones */
@@ -116,38 +134,56 @@ h2 {
     display: flex;
     justify-content: center;
     gap: 20px;
-    margin-top: 20px;
+    margin-top: 25px;
+    flex-wrap: wrap;
 }
 
 /* Botón general */
 button {
-    font-size: 18px;
+    font-size: 1.1rem;
+    font-weight: 600;
     color: #FFFFFF;
-    background: #000000;
-    border: 2px solid #FFFFFF;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.3) 0%, rgba(80, 0, 180, 0.3) 100%);
+    border: 2px solid #bb00ff;
     border-radius: 12px;
-    padding: 12px 20px;
+    padding: 14px 28px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    width: 100%; /* Asegura que los botones ocupen todo el ancho permitido */
-    max-width: 200px;
+    width: 100%;
+    max-width: 220px;
     box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(187, 0, 255, 0.3);
+    text-shadow: 0 0 10px rgba(187, 0, 255, 0.6);
 }
 
 button:hover {
-    background: #bb00ff;
-    border-color: #bb00ff;
-    transform: scale(1.05);
-    text-shadow: 0 0 5px #FFFFFF, 0 0 15px #FFFFFF;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.5) 0%, rgba(80, 0, 180, 0.5) 100%);
+    border-color: #ff00ff;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(187, 0, 255, 0.6),
+                0 0 40px rgba(187, 0, 255, 0.4);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1),
+                 0 0 30px rgba(187, 0, 255, 1);
+}
+
+button:active {
+    transform: translateY(0) scale(0.98);
 }
 
 /* Mensajes de error */
 #error {
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top: 15px;
+    font-size: 1.05rem;
     color: #ff4d4d;
     text-align: center;
+    padding: 12px 20px;
+    background: rgba(255, 77, 77, 0.1);
+    border: 1px solid rgba(255, 77, 77, 0.4);
+    border-radius: 10px;
+    text-shadow: 0 0 10px rgba(255, 77, 77, 0.8);
+}
 }
 
 /* Media Query para pantallas menores de 768px */

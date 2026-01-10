@@ -8,7 +8,7 @@ body {
     height: 100vh;
     color: #FFFFFF;
     overflow: hidden;
-    background-color: #121212;
+    background: linear-gradient(135deg, #0a0015 0%, #1a0033 50%, #2d0052 100%);
 }
 
 /* Video de fondo */
@@ -20,118 +20,141 @@ body {
     height: 100%;
     object-fit: cover;
     z-index: -1;
+    opacity: 0.7;
 }
 
 /* Contenedor de preguntas */
 #preguntas {
-    background-color: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
     color: white;
-    border-radius: 20px;
-    padding: 40px 30px;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
-    border: 5px solid #bb00ff;
-    max-width: 50vw;
+    border-radius: 25px;
+    padding: 45px 35px;
+    box-shadow: 0 12px 50px rgba(187, 0, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 3px solid #bb00ff;
+    max-width: 55vw;
     width: 100%;
-    max-height: 70%; /* Controlar altura máxima */
+    max-height: 80%;
     margin: 20px auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
-    font-weight: bold;
-    line-height: 1.8;
-    text-shadow: 
-        0 0 15px #bb00ff, 
-        0 0 30px #bb00ff;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-shadow: 0 0 15px rgba(187, 0, 255, 0.9),
+                 0 0 30px rgba(187, 0, 255, 0.6);
+    animation: cardPulse 3s ease-in-out infinite;
+}
+
+@keyframes cardPulse {
+    0%, 100% { 
+        box-shadow: 0 12px 50px rgba(187, 0, 255, 0.5);
+    }
+    50% { 
+        box-shadow: 0 15px 60px rgba(187, 0, 255, 0.7), 0 0 80px rgba(187, 0, 255, 0.4);
+    }
 }
 
 /* Texto de la pregunta */
 #questionText {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-align: center;
 }
 
 /* Texto del título "Quién es más probable..." */
 #questionNumber {
-    font-size: 1.6rem;
-    font-weight: bold;
+    font-size: 1.8rem;
+    font-weight: 700;
     color: #FFFFFF;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 20px rgba(187, 0, 255, 0.8);
 }
 
 /* Botones distribuidos */
 #userButtons {
-    display: grid; /* Usar grid para distribuir botones */
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Distribución dinámica */
-    gap: 15px; /* Espaciado entre botones */
-    width: 100%; /* Ocupa todo el ancho disponible */
-    padding: 10px 20px;
-    margin-top: 20px;
-    justify-items: center; /* Centrar los botones en cada celda */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    width: 100%;
+    padding: 15px 20px;
+    margin-top: 25px;
+    justify-items: center;
 }
 
 /* Botones comunes */
 #nextQuestionButton, #logoutButton, #showResultsButton, .btn-general, #lobbyButton {
-    font-size: 14px; /* Tamaño ajustado */
+    font-size: 1rem;
+    font-weight: 600;
     color: #FFFFFF;
-    background: #000000;
-    border: 2px solid #FFFFFF;
-    border-radius: 10px;
-    padding: 12px 20px;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.3) 0%, rgba(80, 0, 180, 0.3) 100%);
+    border: 2px solid #bb00ff;
+    border-radius: 12px;
+    padding: 13px 22px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    max-width: 180px; /* Tamaño proporcional */
+    max-width: 200px;
     text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center; /* Centrar texto verticalmente */
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(187, 0, 255, 0.3);
+    text-shadow: 0 0 10px rgba(187, 0, 255, 0.6);
 }
 
 /* Efecto hover para botones */
 #nextQuestionButton:hover, #logoutButton:hover, #showResultsButton:hover, .btn-general:hover , #lobbyButton:hover {
-    background: #bb00ff;
-    border-color: #bb00ff;
-    transform: scale(1.05);
-    text-shadow: 0 0 5px #FFFFFF, 0 0 20px #FFFFFF;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.5) 0%, rgba(80, 0, 180, 0.5) 100%);
+    border-color: #ff00ff;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(187, 0, 255, 0.6),
+                0 0 40px rgba(187, 0, 255, 0.4);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1),
+                 0 0 30px rgba(187, 0, 255, 1);
+}
+
+#nextQuestionButton:active, #logoutButton:active, #showResultsButton:active, .btn-general:active, #lobbyButton:active {
+    transform: translateY(0) scale(0.98);
 }
 
 /* Botones de votación */
 #userButtons .btn-general {
-    font-size: 13px;
-    padding: 10px 15px; /* Espaciado interno adecuado */
+    font-size: 0.95rem;
+    padding: 12px 18px;
 }
 
 /* Botones deshabilitados */
 #userButtons .btn-general:disabled {
-    background: #555555 !important;
+    background: rgba(85, 85, 85, 0.4) !important;
     color: #aaaaaa !important;
-    border-color: #555555 !important;
+    border-color: rgba(85, 85, 85, 0.6) !important;
     cursor: not-allowed;
     transform: none;
     text-shadow: none;
-    opacity: 0.6;
+    opacity: 0.5;
     pointer-events: none;
 }
 
 /* Contenedor del mensaje del ganador */
 #resultsSection {
-    padding: 20px;
+    padding: 25px;
     display: none;
     text-align: center;
 }
 
 /* Texto del ganador */
 #resultsSection #winnerName {
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 2.2rem;
+    font-weight: 700;
     color: #ffffff !important;
-    text-shadow: 
-        0 0 15px #bb00ff, 
-        0 0 30px #bb00ff;
-    margin: 20px 0;
+    text-shadow: 0 0 20px rgba(187, 0, 255, 0.9),
+                 0 0 40px rgba(187, 0, 255, 0.6);
+    margin: 25px 0;
     animation: winnerFadeIn 1s ease-in-out;
 }
 

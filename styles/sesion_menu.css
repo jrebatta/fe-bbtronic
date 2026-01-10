@@ -4,7 +4,7 @@ body {
     font-family: 'Roboto', sans-serif;
     height: 100vh;
     color: #FFFFFF;
-    background-color: #121212;
+    background: linear-gradient(135deg, #0a0015 0%, #1a0033 50%, #2d0052 100%);
 }
 
 /* Video de fondo */
@@ -16,6 +16,7 @@ body {
     height: 100%;
     object-fit: cover;
     z-index: -1;
+    opacity: 0.7;
 }
 
 /* Contenedor principal */
@@ -33,27 +34,31 @@ body {
     justify-content: space-between;
     width: 90%;
     max-width: 1200px;
-    gap: 20px;
-    flex-wrap: wrap; /* Permitir que los elementos se reorganicen */
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
 /* Sección izquierda: lista de usuarios */
 .left-section {
     flex: 1;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(187, 0, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(187, 0, 255, 0.2);
     height: 80vh;
     overflow-y: auto;
-    min-width: 280px; /* Asegurar un tamaño mínimo para móviles */
+    min-width: 280px;
 }
 
 .left-section h2 {
-    font-size: 24px;
-    margin-bottom: 15px;
-    text-shadow: 0 0 5px #FFFFFF;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(187, 0, 255, 0.8),
+                 0 0 40px rgba(187, 0, 255, 0.5);
     text-align: center;
+    letter-spacing: 1px;
 }
 
 #userList {
@@ -62,84 +67,106 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 #userList .list-group-item {
-    background: #1a1a1a;
-    padding: 10px;
+    background: rgba(20, 0, 40, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 15px;
     margin-bottom: 10px;
-    border-radius: 5px;
+    border-radius: 12px;
+    border: 1px solid rgba(187, 0, 255, 0.3);
     color: #FFFFFF;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
 #userList .list-group-item:hover {
-    background-color: #007bff;
+    background: rgba(187, 0, 255, 0.3);
+    border-color: #bb00ff;
     color: #FFFFFF;
-    box-shadow: 0 0 10px #007bff;
-    transition: 0.3s ease;
+    box-shadow: 0 0 20px rgba(187, 0, 255, 0.5);
+    transform: translateX(5px);
 }
 
 /* Sección derecha: botones */
 .right-section {
     flex: 1;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(187, 0, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(187, 0, 255, 0.2);
     height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; /* Centrar botones horizontalmente */
-    min-width: 280px; /* Asegurar un tamaño mínimo para móviles */
+    align-items: center;
+    min-width: 280px;
 }
 
 .right-section h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-shadow: 0 0 5px #FFFFFF;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(187, 0, 255, 0.8),
+                 0 0 40px rgba(187, 0, 255, 0.5);
     text-align: center;
+    letter-spacing: 1px;
 }
 
 /* Botones */
 button {
     display: block;
     width: 100%;
-    max-width: 300px; /* Limitar el ancho máximo */
-    margin-bottom: 15px;
-    padding: 14px 20px; /* Más espacio interno */
-    border: 2px solid #FFFFFF; /* Bordes definidos */
-    border-radius: 12px; /* Bordes más redondeados */
-    background: #000000; /* Fondo negro */
+    max-width: 320px;
+    margin-bottom: 18px;
+    padding: 16px 25px;
+    border: 2px solid #bb00ff;
+    border-radius: 15px;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.2) 0%, rgba(80, 0, 180, 0.2) 100%);
     color: #FFFFFF;
-    font-size: 18px; /* Fuente más grande */
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     cursor: pointer;
     text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(187, 0, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    text-shadow: 0 0 10px rgba(187, 0, 255, 0.6);
 }
 
 button:hover {
-    background: #bb00ff; /* Cambiar fondo al púrpura */
-    border-color: #bb00ff; /* Borde púrpura */
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.4) 0%, rgba(80, 0, 180, 0.4) 100%);
+    border-color: #ff00ff;
     color: #FFFFFF;
-    transform: scale(1.05);
-    text-shadow: 0 0 5px #FFFFFF, 0 0 15px #FFFFFF;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(187, 0, 255, 0.6),
+                0 0 40px rgba(187, 0, 255, 0.4);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1),
+                 0 0 30px rgba(187, 0, 255, 1);
+}
+
+button:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 /* Botón de peligro */
 .btn-danger {
-    background: #dc3545;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.3) 0%, rgba(160, 30, 40, 0.3) 100%);
     border-color: #dc3545;
 }
 
 .btn-danger:hover {
-    background: #b02a37;
-    border-color: #b02a37;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.5) 0%, rgba(160, 30, 40, 0.5) 100%);
+    border-color: #ff4d5e;
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.6),
+                0 0 40px rgba(220, 53, 69, 0.4);
 }
 
 /* Responsividad */

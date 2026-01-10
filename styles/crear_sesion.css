@@ -7,8 +7,8 @@ body {
     align-items: center;
     min-height: 100vh;
     color: #FFFFFF;
-    overflow: auto; /* Permitir scroll si el contenido supera el alto de la pantalla */
-    background-color: #121212;
+    overflow: auto;
+    background: linear-gradient(135deg, #0a0015 0%, #1a0033 50%, #2d0052 100%);
 }
 
 /* Video de fondo */
@@ -20,6 +20,7 @@ body {
     height: 100%;
     object-fit: cover;
     z-index: -1;
+    opacity: 0.7;
 }
 
 /* Contenedor principal */
@@ -31,20 +32,35 @@ body {
     justify-content: center;
     align-items: center;
     height: 100%;
-    gap: 20px;
-    padding: 20px; /* Espaciado interno para evitar que el contenido se pegue a los bordes */
-    box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
+    gap: 30px;
+    padding: 40px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    border: 1px solid rgba(187, 0, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(187, 0, 255, 0.2);
+    max-width: 500px;
+    animation: slideIn 0.6s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Título principal */
 h1 {
-    font-size: 2.5rem; /* Escalable para pantallas pequeñas */
-    font-weight: bold;
+    font-size: 2.8rem;
+    font-weight: 700;
     color: #FFFFFF;
-    margin: 0;
+    margin: 0 0 10px 0;
     text-transform: uppercase;
-    text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
-    word-wrap: break-word; /* Forzar el salto de línea si el texto es muy largo */
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(187, 0, 255, 0.8),
+                 0 0 40px rgba(187, 0, 255, 0.5),
+                 0 0 60px rgba(187, 0, 255, 0.3);
+    word-wrap: break-word;
 }
 
 /* Input del formulario */
@@ -54,25 +70,30 @@ form {
 }
 
 form .form-control {
-    background: #000000;
+    background: rgba(0, 0, 0, 0.6);
     color: #FFFFFF;
-    border: 2px solid #FFFFFF;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 1rem; /* Relativo a las pantallas */
+    border: 2px solid rgba(187, 0, 255, 0.5);
+    border-radius: 12px;
+    padding: 15px 20px;
+    font-size: 1.1rem;
     text-align: center;
-    transition: border-color 0.3s ease;
-    width: 100%; /* Adaptar el tamaño al contenedor */
-    box-sizing: border-box; /* Incluir padding y borde */
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 form .form-control:focus {
     outline: none;
-    box-shadow: 0 0 5px #FFFFFF;
+    border-color: #bb00ff;
+    box-shadow: 0 0 20px rgba(187, 0, 255, 0.6),
+                inset 0 2px 5px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.7);
 }
 
 form .form-control::placeholder {
-    color: #FFFFFF;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 form .form-control:focus::placeholder {
@@ -81,54 +102,74 @@ form .form-control:focus::placeholder {
 
 /* Botón de envío */
 form button[type="submit"] {
-    font-size: 1rem; /* Relativo a la pantalla */
+    font-size: 1.1rem;
+    font-weight: 600;
     color: #FFFFFF;
-    background: #000000;
-    border: 2px solid #FFFFFF;
-    border-radius: 10px;
-    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.3) 0%, rgba(80, 0, 180, 0.3) 100%);
+    border: 2px solid #bb00ff;
+    border-radius: 12px;
+    padding: 15px 35px;
     text-transform: uppercase;
-    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    max-width: 160px;
     margin: 20px auto 0;
-    width: 100%; /* Adaptar al tamaño del contenedor */
+    width: 100%;
     box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(187, 0, 255, 0.3);
+    text-shadow: 0 0 10px rgba(187, 0, 255, 0.6);
 }
 
 form button[type="submit"]:hover {
-    background: #bb00ff;
-    border-color: #bb00ff;
-    transform: scale(1.05);
-    text-shadow: 0 0 3px #FFFFFF, 0 0 10px #FFFFFF;
+    background: linear-gradient(135deg, rgba(187, 0, 255, 0.5) 0%, rgba(80, 0, 180, 0.5) 100%);
+    border-color: #ff00ff;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(187, 0, 255, 0.6),
+                0 0 40px rgba(187, 0, 255, 0.4);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1),
+                 0 0 30px rgba(187, 0, 255, 1);
+}
+
+form button[type="submit"]:active {
+    transform: translateY(0) scale(0.98);
 }
 
 /* Mensajes de error */
 #error {
-    font-size: 1.25rem; /* Escalable */
+    font-size: 1.1rem;
     color: #ff4d4d;
     text-align: center;
+    padding: 12px 20px;
+    background: rgba(255, 77, 77, 0.1);
+    border: 1px solid rgba(255, 77, 77, 0.4);
+    border-radius: 10px;
+    text-shadow: 0 0 10px rgba(255, 77, 77, 0.8);
 }
 
 /* Información de sesión */
 #sessionInfo {
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 15px;
     text-align: center;
     margin-top: 20px;
+    border: 1px solid rgba(187, 0, 255, 0.3);
+    box-shadow: 0 4px 20px rgba(187, 0, 255, 0.2);
 }
 
 #sessionInfo h3 {
-    font-size: 1.5rem; /* Escalable */
-    font-weight: bold;
+    font-size: 1.6rem;
+    font-weight: 700;
     color: #FFFFFF;
+    text-shadow: 0 0 15px rgba(187, 0, 255, 0.8);
+    margin-bottom: 10px;
 }
 
 #sessionInfo p {
-    font-size: 1rem; /* Escalable */
-    color: #FFFFFF;
-    margin: 5px 0;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 8px 0;
 }
 
 /* Media Queries */
@@ -179,7 +220,8 @@ form button[type="submit"]:hover {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -188,12 +230,14 @@ form button[type="submit"]:hover {
 
 /* Animación del spinner */
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid rgba(255, 255, 255, 0.2);
-    border-top-color: #fff;
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(187, 0, 255, 0.2);
+    border-top-color: #bb00ff;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    box-shadow: 0 0 30px rgba(187, 0, 255, 0.5),
+                inset 0 0 20px rgba(187, 0, 255, 0.3);
 }
 
 @keyframes spin {
