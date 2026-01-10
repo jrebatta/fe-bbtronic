@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         votingSection.style.display = "block";
         generateVotingButtons(JSON.parse(sessionStorage.getItem("users")) || []);
         showResultsButton.disabled = false;
+        nextQuestionButton.disabled = true; // Deshabilitar el botón siguiente
     }
 
     function generateVotingButtons(users) {
@@ -102,9 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
         winnerName.textContent = winner || "Empate";
         resultsSection.style.display = "block";
         showResultsButton.disabled = true;
+        nextQuestionButton.disabled = false; // Habilitar el botón siguiente
     }
 
     function fetchNextQuestion() {
+        nextQuestionButton.disabled = true; // Deshabilitar mientras se carga la siguiente pregunta
         fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/clear-votes`, { method: "POST" })
             .then(() => fetch(`${API_BASE_URL}/api/game-sessions/${sessionCode}/next-quien-es-mas-probable?tipo=all`))
             .then(response => response.text())
